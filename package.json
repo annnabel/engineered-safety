@@ -1,0 +1,18 @@
+{
+  "name": "engineered-safety-platform",
+  "version": "1.0.0",
+  "description": "Engineered Safety Platform for Fremantle Bridges Alliance",
+  "scripts": {
+    "build": "node build-standalone.js",
+    "dev": "echo 'Open project/Engineered Safety Platform.html in your browser'"
+  },
+  "keywords": [
+    "safety",
+    "engineering",
+    "construction",
+    "ideas",
+    "workflow"
+  ],
+  "author": "Laing O'Rourke",
+  "license": "Proprietary"
+}

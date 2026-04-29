@@ -1,0 +1,1944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Engineered Safety Platform — Fremantle Bridges Alliance</title>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+    body { background: #f2f2f2; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f2f2f2; }
+    ::-webkit-scrollbar-thumb { background: #cccccc; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #999; }
+    input, textarea, select, button { font-family: "Century Gothic", Arial, Helvetica, sans-serif; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(12px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+  </style>
+
+  <template id="__bundler_thumbnail">
+    <svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
+      <rect width="120" height="80" fill="#f2f2f2"/>
+      <rect x="0" y="0" width="120" height="16" fill="#ffffff"/>
+      <rect x="8" y="4" width="20" height="8" rx="2" fill="#e30613"/>
+      <rect x="32" y="6" width="40" height="4" rx="2" fill="#e6e6e6"/>
+      <rect x="8" y="22" width="24" height="14" rx="3" fill="#ffffff" stroke="#e6e6e6"/>
+      <rect x="36" y="22" width="24" height="14" rx="3" fill="#ffffff" stroke="#e6e6e6"/>
+      <rect x="64" y="22" width="24" height="14" rx="3" fill="#ffffff" stroke="#e6e6e6"/>
+      <rect x="92" y="22" width="24" height="14" rx="3" fill="#ffffff" stroke="#e6e6e6"/>
+      <rect x="8" y="42" width="50" height="30" rx="3" fill="#ffffff" stroke="#e6e6e6"/>
+      <rect x="14" y="48" width="12" height="3" rx="1" fill="#64a70b"/>
+      <rect x="14" y="54" width="20" height="3" rx="1" fill="#00a7b5"/>
+      <rect x="14" y="60" width="16" height="3" rx="1" fill="#fe5000"/>
+      <rect x="14" y="66" width="24" height="3" rx="1" fill="#e30613"/>
+      <rect x="62" y="42" width="54" height="30" rx="3" fill="#ffffff" stroke="#e6e6e6"/>
+      <circle cx="89" cy="57" r="10" fill="none" stroke="#e6e6e6" stroke-width="6"/>
+      <path d="M89 47 A10 10 0 0 1 99 57" stroke="#e30613" stroke-width="6" fill="none"/>
+      <path d="M99 57 A10 10 0 0 1 89 67" stroke="#64a70b" stroke-width="6" fill="none"/>
+    </svg>
+  </template>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- All component code bundled inline -->
+  <script type="text/babel">
+
+
+'use strict';
+const { useState, useEffect, useRef } = React;
+
+// ── DESIGN TOKENS ──────────────────────────────────────────────────────────
+const T = {
+  red:'#e30613', redHover:'#b80409', redActive:'#7a0206',
+  teal:'#00a7b5', tealDark:'#009cde',
+  green:'#64a70b', orange:'#fe5000', yellow:'#ffcd00',
+  text:'#2d2d2d', textSec:'#4d4d4d', textMuted:'#999999',
+  border:'#cccccc', borderLight:'#e6e6e6',
+  bg:'#f2f2f2', white:'#ffffff',
+  font:'"Century Gothic", Arial, Helvetica, sans-serif',
+  s1:'0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24)',
+  s2:'0 3px 6px rgba(0,0,0,.15),0 2px 4px rgba(0,0,0,.12)',
+  s3:'0 10px 20px rgba(0,0,0,.15),0 3px 6px rgba(0,0,0,.10)',
+};
+
+// ── LOR LOGO ───────────────────────────────────────────────────────────────
+const LORLogo = ({ onClick }) => (
+  <div onClick={onClick} style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer',userSelect:'none'}}>
+    <div style={{background:T.red,width:38,height:38,borderRadius:3,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+      <span style={{color:'white',fontWeight:700,fontSize:11,fontFamily:T.font,letterSpacing:1}}>LOR</span>
+    </div>
+    <div style={{lineHeight:1.25}}>
+      <div style={{fontWeight:700,fontSize:14,color:T.text,fontFamily:T.font}}>Engineered Safety</div>
+      <div style={{fontWeight:400,fontSize:10,color:T.textMuted,fontFamily:T.font,letterSpacing:.3}}>Platform · FBA</div>
+    </div>
+  </div>
+);
+
+// ── HEADER ─────────────────────────────────────────────────────────────────
+const Header = ({ view, nav, notifCount=3, roleNav=[], roleLabel='', onSwitchRole }) => {
+  const [menu, setMenu] = useState(false);
+  return (
+    <header style={{
+      background:T.white,borderBottom:`1px solid ${T.borderLight}`,
+      height:64,display:'flex',alignItems:'center',padding:'0 32px',
+      position:'sticky',top:0,zIndex:100,boxShadow:T.s1,gap:8,
+    }}>
+      <LORLogo onClick={() => nav('dashboard')} />
+      <nav style={{display:'flex',gap:2,flex:1,marginLeft:16}}>
+        {roleNav.map(n => (
+          <button key={n.id} onClick={() => nav(n.id)} style={{
+            background:'none',border:'none',borderBottom:`2px solid ${view===n.id?T.teal:'transparent'}`,
+            cursor:'pointer',padding:'8px 14px',fontFamily:T.font,fontSize:13.5,
+            fontWeight:view===n.id?600:400,color:view===n.id?T.teal:T.textSec,
+            transition:'color 120ms',borderRadius:'4px 4px 0 0',
+          }}>{n.label}</button>
+        ))}
+      </nav>
+      <div style={{display:'flex',alignItems:'center',gap:12,flexShrink:0}}>
+        <div style={{position:'relative'}}>
+          <button style={{background:'none',border:'none',cursor:'pointer',padding:'4px 8px',fontSize:18,color:T.textSec,lineHeight:1}}>🔔</button>
+          {notifCount>0 && <span style={{position:'absolute',top:0,right:0,background:T.red,color:'white',borderRadius:'50%',width:16,height:16,fontSize:9,fontWeight:700,display:'flex',alignItems:'center',justifyContent:'center',fontFamily:T.font}}>{notifCount}</span>}
+        </div>
+        <div style={{position:'relative'}}>
+          <button onClick={()=>setMenu(p=>!p)} style={{
+            background:T.teal,border:'none',cursor:'pointer',
+            width:34,height:34,borderRadius:'50%',color:'white',
+            fontFamily:T.font,fontSize:12,fontWeight:700,
+          }}>JA</button>
+          {menu && (
+            <div style={{position:'absolute',right:0,top:42,background:T.white,border:`1px solid ${T.borderLight}`,borderRadius:8,boxShadow:T.s2,minWidth:200,zIndex:200,overflow:'hidden'}}>
+              <div style={{padding:'12px 16px',borderBottom:`1px solid ${T.borderLight}`}}>
+                <div style={{fontWeight:600,fontSize:13,color:T.text,fontFamily:T.font}}>Jake Anderson</div>
+                <div style={{fontSize:11,color:T.teal,fontFamily:T.font,fontWeight:600,marginTop:2}}>{roleLabel}</div>
+              </div>
+              {['My Profile','Preferences','Help & Support'].map(itm => (
+                <button key={itm} onClick={()=>setMenu(false)} style={{display:'block',width:'100%',textAlign:'left',background:'none',border:'none',padding:'9px 16px',fontSize:13,fontFamily:T.font,color:T.text,cursor:'pointer'}}
+                onMouseEnter={e=>e.currentTarget.style.background=T.bg}
+                onMouseLeave={e=>e.currentTarget.style.background='none'}
+                >{itm}</button>
+              ))}
+              <div style={{borderTop:`1px solid ${T.borderLight}`}}>
+                <button onClick={()=>{setMenu(false);onSwitchRole&&onSwitchRole();}} style={{display:'block',width:'100%',textAlign:'left',background:'none',border:'none',padding:'9px 16px',fontSize:13,fontFamily:T.font,color:T.red,cursor:'pointer',fontWeight:600}}
+                onMouseEnter={e=>e.currentTarget.style.background='#fce4ec'}
+                onMouseLeave={e=>e.currentTarget.style.background='none'}
+                >Switch Role</button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </header>
+  );
+};
+
+// ── BUTTON ─────────────────────────────────────────────────────────────────
+const Btn = ({ children, variant='primary', size='md', onClick, disabled, style:ext={} }) => {
+  const [h,setH] = useState(false);
+  const vs = {
+    primary:{bg:h?T.redHover:T.red,color:'white',border:'none'},
+    secondary:{bg:h?'#ffcccc':'white',color:T.red,border:`2px solid ${T.red}`},
+    teal:{bg:h?T.tealDark:T.teal,color:'white',border:'none'},
+    ghost:{bg:h?T.bg:'transparent',color:T.textSec,border:`1px solid ${T.border}`},
+    danger:{bg:h?T.redHover:T.red,color:'white',border:'none'},
+  };
+  const sz = {sm:{p:'6px 14px',fs:12,h:32},md:{p:'9px 20px',fs:13.5,h:40},lg:{p:'12px 28px',fs:15,h:48}};
+  const v = vs[variant]||vs.primary; const s = sz[size]||sz.md;
+  return (
+    <button onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)}
+      onClick={onClick} disabled={disabled}
+      style={{...v,padding:s.p,fontSize:s.fs,height:s.h,borderRadius:4,
+        cursor:disabled?'not-allowed':'pointer',fontFamily:T.font,fontWeight:600,
+        opacity:disabled?.6:1,display:'inline-flex',alignItems:'center',
+        justifyContent:'center',gap:6,transition:'all 120ms',
+        boxSizing:'border-box',flexShrink:0,...ext}}
+    >{children}</button>
+  );
+};
+
+// ── STATUS BADGE ───────────────────────────────────────────────────────────
+const BADGE_CFG = {
+  'Submitted':     {bg:'#e8f0fe',color:'#1a56db'},
+  'Under Review':  {bg:'#fff3e0',color:'#c75000'},
+  'Pending Decision':{bg:'#f3e8ff',color:'#7c3aed'},
+  'Approved':      {bg:'#ecfae3',color:T.green},
+  'Rejected':      {bg:'#fce4ec',color:T.red},
+  'Closed':        {bg:'#f5f5f5',color:T.textMuted},
+  'In Progress':   {bg:'#fff8e1',color:'#e65100'},
+  'New':           {bg:'#ecfae3',color:T.green},
+  'LOR Preferred': {bg:'#fffde7',color:'#c79200'},
+  'Case Study':    {bg:'#e8eaf6',color:'#3949ab'},
+  'Not Started':   {bg:'#f5f5f5',color:T.textMuted},
+  'Pending Approval':{bg:'#f3e8ff',color:'#7c3aed'},
+};
+const StatusBadge = ({status,icon}) => {
+  const c = BADGE_CFG[status]||{bg:T.bg,color:T.textMuted};
+  return <span style={{background:c.bg,color:c.color,padding:'3px 10px',borderRadius:12,fontSize:11,fontWeight:600,fontFamily:T.font,display:'inline-block',whiteSpace:'nowrap'}}>{icon&&<span style={{marginRight:4}}>{icon}</span>}{status}</span>;
+};
+
+// ── SECTOR TAG ─────────────────────────────────────────────────────────────
+const SECTOR_COLORS = {Rail:'#7c3aed',Roads:'#1d4ed8',Defence:'#5b21b6','Delivery Partner':'#0e7490',Water:'#065f46',Energy:'#b91c1c',Other:'#6b7280'};
+const SectorTag = ({sector}) => (
+  <span style={{background:SECTOR_COLORS[sector]||SECTOR_COLORS.Other,color:'white',padding:'2px 10px',borderRadius:12,fontSize:10,fontWeight:500,fontFamily:T.font,display:'inline-block'}}>{sector}</span>
+);
+
+// ── KPI CARD ───────────────────────────────────────────────────────────────
+const KPICard = ({label,value,trend,trendLabel,cta,onCta,loading,accent}) => (
+  <div style={{background:T.white,borderRadius:8,padding:'20px',boxShadow:T.s1,flex:'1 1 160px',borderTop:`3px solid ${accent||T.teal}`,minWidth:0}}>
+    {loading ? (
+      <div style={{animation:'pulse 1.5s ease infinite'}}>
+        <div style={{height:11,width:'55%',background:T.borderLight,borderRadius:3,marginBottom:12}} />
+        <div style={{height:36,width:'40%',background:T.borderLight,borderRadius:3,marginBottom:8}} />
+        <div style={{height:10,width:'45%',background:T.borderLight,borderRadius:3}} />
+      </div>
+    ) : (
+      <>
+        <div style={{fontSize:11,color:T.textMuted,fontFamily:T.font,fontWeight:600,textTransform:'uppercase',letterSpacing:.7,marginBottom:8}}>{label}</div>
+        <div style={{fontSize:34,fontWeight:700,color:T.text,fontFamily:T.font,lineHeight:1,marginBottom:6}}>{value}</div>
+        {trend!=null&&<div style={{fontSize:11,color:trend>0?T.green:T.red,fontFamily:T.font,fontWeight:600}}>{trend>0?'↑':'↓'} {Math.abs(trend)}% {trendLabel}</div>}
+        {cta&&<button onClick={onCta} style={{background:'none',border:'none',cursor:'pointer',color:T.teal,fontSize:11,fontFamily:T.font,fontWeight:600,padding:0,marginTop:6,display:'block'}}>{cta} →</button>}
+      </>
+    )}
+  </div>
+);
+
+// ── TOAST ──────────────────────────────────────────────────────────────────
+const Toast = ({message,type='success',onDismiss}) => {
+  useEffect(()=>{const t=setTimeout(onDismiss,5000);return()=>clearTimeout(t);},[]);
+  const cfg={success:{bg:'#ecfae3',border:T.green,icon:'✓'},error:{bg:'#fce4ec',border:T.red,icon:'✗'},warning:{bg:'#fff8e1',border:T.orange,icon:'⚠'},info:{bg:'#e3f2fd',border:T.teal,icon:'ℹ'}};
+  const c=cfg[type]||cfg.info;
+  return (
+    <div style={{position:'fixed',bottom:24,right:24,zIndex:3000,background:c.bg,border:`1px solid ${c.border}`,borderLeft:`4px solid ${c.border}`,borderRadius:8,padding:'14px 44px 14px 16px',maxWidth:380,boxShadow:T.s2,fontFamily:T.font,fontSize:13.5,color:T.text,display:'flex',alignItems:'center',gap:10,animation:'slideUp .25s ease'}}>
+      <span style={{fontSize:16,flexShrink:0}}>{c.icon}</span>
+      {message}
+      <button onClick={onDismiss} style={{position:'absolute',right:12,top:'50%',transform:'translateY(-50%)',background:'none',border:'none',cursor:'pointer',color:T.textMuted,fontSize:20,lineHeight:1}}>×</button>
+    </div>
+  );
+};
+
+// ── STAR RATING ────────────────────────────────────────────────────────────
+const Stars = ({rating, count, size=14}) => (
+  <span style={{display:'inline-flex',alignItems:'center',gap:3}}>
+    {[1,2,3,4,5].map(i=>(
+      <span key={i} style={{fontSize:size,color:i<=Math.round(rating)?'#f59e0b':'#ddd',lineHeight:1}}>★</span>
+    ))}
+    <span style={{fontSize:11,color:T.textMuted,fontFamily:T.font,marginLeft:2}}>{rating} ({count})</span>
+  </span>
+);
+
+// ── PAGE SHELL ─────────────────────────────────────────────────────────────
+const Page = ({children,title,subtitle,actions,breadcrumb}) => (
+  <div style={{background:T.bg,minHeight:'calc(100vh - 64px)',padding:'28px 32px'}}>
+    {breadcrumb && <div style={{fontSize:11,color:T.textMuted,fontFamily:T.font,marginBottom:12}}>{breadcrumb}</div>}
+    {(title||actions) && (
+      <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:24}}>
+        <div>
+          <h1 style={{fontFamily:T.font,fontSize:24,fontWeight:700,color:T.text,margin:0,lineHeight:1.2}}>{title}</h1>
+          {subtitle&&<p style={{fontFamily:T.font,fontSize:13.5,color:T.textMuted,margin:'4px 0 0'}}>{subtitle}</p>}
+        </div>
+        {actions&&<div style={{display:'flex',gap:8}}>{actions}</div>}
+      </div>
+    )}
+    {children}
+  </div>
+);
+
+// ── SECTION CARD ───────────────────────────────────────────────────────────
+const Card = ({children,style:ext={}}) => (
+  <div style={{background:T.white,borderRadius:8,padding:24,boxShadow:T.s1,...ext}}>{children}</div>
+);
+
+// ── DAYS PENDING INDICATOR ─────────────────────────────────────────────────
+const DaysPending = ({days}) => (
+  <span style={{fontFamily:T.font,fontSize:12,fontWeight:600,color:days>7?T.red:days>3?T.orange:T.green}}>
+    {days}d {days>7?'🔴':days>3?'⚠️':''}
+  </span>
+);
+
+Object.assign(window, {T,LORLogo,Header,Btn,StatusBadge,SectorTag,KPICard,Toast,Stars,Page,Card,DaysPending});
+
+
+
+'use strict';
+const { useState, useEffect, useRef } = React;
+
+const RECENT = [
+  {id:'ES-247',title:'Modular Deck Edge Barrier System',submitter:'S. Thompson',date:'29 Apr 2026',status:'Submitted',sector:'Rail'},
+  {id:'ES-246',title:'Rebar Cage Safety Netting',submitter:'M. Chen',date:'28 Apr 2026',status:'Approved',sector:'Roads'},
+  {id:'ES-245',title:'Concrete Pour Proximity Sensors',submitter:'A. Patel',date:'27 Apr 2026',status:'Under Review',sector:'Water'},
+  {id:'ES-244',title:'Enhanced PPE QR-Code Tracking',submitter:'J. Walsh',date:'25 Apr 2026',status:'Approved',sector:'Defence'},
+  {id:'ES-243',title:'Night Works Lighting Protocol',submitter:'R. Davis',date:'24 Apr 2026',status:'Closed',sector:'Energy'},
+];
+
+const StatusChart = () => {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (!ref.current || typeof Chart === 'undefined') return;
+    const chart = new Chart(ref.current.getContext('2d'), {
+      type:'bar',
+      data:{
+        labels:['Submitted','Under Review','Approved','Rejected','Closed'],
+        datasets:[{
+          data:[45,32,98,18,54],
+          backgroundColor:['#1a56db','#c75000','#64a70b','#e30613','#999'],
+          borderRadius:5, borderSkipped:false,
+        }]
+      },
+      options:{
+        indexAxis:'y', responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+ctx.parsed.x+' ideas'}}},
+        scales:{
+          x:{grid:{color:'#f0f0f0'},ticks:{font:{family:'Century Gothic, Arial',size:10},color:'#999'}},
+          y:{grid:{display:false},ticks:{font:{family:'Century Gothic, Arial',size:11},color:'#4d4d4d'}},
+        },
+      }
+    });
+    return () => chart.destroy();
+  }, []);
+  return <div style={{height:200}}><canvas ref={ref} /></div>;
+};
+
+const SectorChart = () => {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (!ref.current || typeof Chart === 'undefined') return;
+    const chart = new Chart(ref.current.getContext('2d'), {
+      type:'doughnut',
+      data:{
+        labels:['Rail','Roads','Defence','Water','Energy','Delivery Partner'],
+        datasets:[{
+          data:[89,42,36,28,17,15],
+          backgroundColor:['#7c3aed','#1d4ed8','#5b21b6','#065f46','#b91c1c','#0e7490'],
+          borderWidth:0, hoverOffset:6,
+        }]
+      },
+      options:{
+        cutout:'65%', responsive:true, maintainAspectRatio:false,
+        plugins:{
+          legend:{position:'right',labels:{font:{family:'Century Gothic, Arial',size:11},padding:14,boxWidth:12,color:'#4d4d4d'}},
+          tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed} ideas`}},
+        },
+      }
+    });
+    return () => chart.destroy();
+  }, []);
+  return <div style={{height:200}}><canvas ref={ref} /></div>;
+};
+
+const Dashboard = ({ nav, showToast }) => {
+  const [loading, setLoading] = useState(true);
+  useEffect(() => { const t = setTimeout(() => setLoading(false), 900); return () => clearTimeout(t); }, []);
+
+  return (
+    <div style={{background:T.bg,minHeight:'calc(100vh - 64px)'}}>
+      {/* Hero Banner */}
+      <div style={{background:'linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%)',padding:'48px 32px',position:'relative',overflow:'hidden'}}>
+        <div style={{position:'absolute',left:0,top:0,bottom:0,width:5,background:T.red}} />
+        <div style={{position:'absolute',right:0,top:0,bottom:0,width:'35%',backgroundImage:'repeating-linear-gradient(45deg,rgba(255,255,255,.02) 0px,rgba(255,255,255,.02) 1px,transparent 1px,transparent 8px)',pointerEvents:'none'}} />
+        <div style={{fontSize:10,fontWeight:700,color:T.teal,letterSpacing:2.5,textTransform:'uppercase',fontFamily:T.font,marginBottom:10}}>FREMANTLE BRIDGES ALLIANCE · PERTH WA · FBA</div>
+        <h1 style={{fontSize:30,fontWeight:700,color:'white',margin:'0 0 6px',fontFamily:T.font,lineHeight:1.2}}>Engineered Safety Platform</h1>
+        <p style={{fontSize:15,color:'rgba(255,255,255,.6)',margin:'0 0 28px',fontFamily:T.font,maxWidth:520}}>Capture, validate, and scale safety innovations across the project workforce.</p>
+        <div style={{display:'flex',gap:12,flexWrap:'wrap'}}>
+          <Btn size="lg" onClick={() => nav('submit')}>+ Submit New Idea</Btn>
+          <Btn size="lg" variant="secondary" onClick={() => nav('search')}
+            style={{borderColor:T.red,color:'white',background:T.red,opacity:0.9}}>
+            Browse Solutions
+          </Btn>
+        </div>
+      </div>
+
+      <div style={{padding:'28px 32px'}}>
+        {/* KPI Cards */}
+        <div style={{display:'flex',gap:16,marginBottom:28,flexWrap:'wrap'}}>
+          <KPICard loading={loading} label="Total Submitted" value="247" trend={12} trendLabel="vs last month" accent={T.teal} />
+          <KPICard loading={loading} label="Pending Reviews" value="8" cta="View Now" onCta={() => nav('esl')} accent={T.orange} />
+          <KPICard loading={loading} label="Approved This Month" value="12" trend={8} trendLabel="vs last month" accent={T.green} />
+          <KPICard loading={loading} label="Avg Implementation" value="45d" trend={-6} trendLabel="days improvement" accent={T.red} />
+        </div>
+
+        {/* Charts Row */}
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:28}}>
+          <Card>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
+              <h3 style={{fontFamily:T.font,fontSize:15,fontWeight:600,color:T.text,margin:0}}>Ideas by Status</h3>
+              <button onClick={() => nav('esl')} style={{background:'none',border:'none',cursor:'pointer',color:T.teal,fontSize:11,fontFamily:T.font,fontWeight:600}}>View All →</button>
+            </div>
+            <StatusChart />
+          </Card>
+          <Card>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
+              <h3 style={{fontFamily:T.font,fontSize:15,fontWeight:600,color:T.text,margin:0}}>Ideas by Sector</h3>
+              <button onClick={() => nav('search')} style={{background:'none',border:'none',cursor:'pointer',color:T.teal,fontSize:11,fontFamily:T.font,fontWeight:600}}>Browse →</button>
+            </div>
+            <SectorChart />
+          </Card>
+        </div>
+
+        {/* Recent + Quick Links */}
+        <div style={{display:'grid',gridTemplateColumns:'1fr 300px',gap:16}}>
+          {/* Recent Activity Table */}
+          <Card style={{padding:0,overflow:'hidden'}}>
+            <div style={{padding:'20px 24px 14px',borderBottom:`1px solid ${T.borderLight}`}}>
+              <h3 style={{fontFamily:T.font,fontSize:15,fontWeight:600,color:T.text,margin:0}}>Recent Activity</h3>
+            </div>
+            <table style={{width:'100%',borderCollapse:'collapse'}}>
+              <thead>
+                <tr style={{background:T.bg}}>
+                  {['ID','Title','Submitter','Date','Status'].map(h=>(
+                    <th key={h} style={{textAlign:'left',padding:'9px 16px',fontSize:10,fontWeight:700,color:T.textMuted,fontFamily:T.font,textTransform:'uppercase',letterSpacing:.6}}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {RECENT.map((row,i) => (
+                  <tr key={row.id}
+                    style={{borderTop:`1px solid ${T.borderLight}`,cursor:'pointer',transition:'background 100ms'}}
+                    onMouseEnter={e=>e.currentTarget.style.background='#f8f9fa'}
+                    onMouseLeave={e=>e.currentTarget.style.background='transparent'}
+                  >
+                    <td style={{padding:'11px 16px',fontSize:11,color:T.teal,fontFamily:T.font,fontWeight:700}}>{row.id}</td>
+                    <td style={{padding:'11px 16px',fontSize:13,color:T.text,fontFamily:T.font}}>{row.title}</td>
+                    <td style={{padding:'11px 16px',fontSize:12,color:T.textMuted,fontFamily:T.font}}>{row.submitter}</td>
+                    <td style={{padding:'11px 16px',fontSize:12,color:T.textMuted,fontFamily:T.font,whiteSpace:'nowrap'}}>{row.date}</td>
+                    <td style={{padding:'11px 16px'}}><StatusBadge status={row.status} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div style={{padding:'12px 24px',borderTop:`1px solid ${T.borderLight}`,textAlign:'center'}}>
+              <button onClick={() => nav('esl')} style={{background:'none',border:'none',cursor:'pointer',color:T.teal,fontSize:12,fontFamily:T.font,fontWeight:600}}>View all submissions →</button>
+            </div>
+          </Card>
+
+          {/* Quick Actions */}
+          <div style={{display:'flex',flexDirection:'column',gap:12}}>
+            {[
+              {icon:'💡',title:'Submit New Idea',desc:'Log a safety innovation in under 5 min',action:'submit',accent:T.red},
+              {icon:'🔍',title:'Browse Solutions',desc:'Search the approved knowledge library',action:'search',accent:T.teal},
+              {icon:'📋',title:'Review Queue',desc:'8 ideas awaiting your approval',action:'esl',accent:T.orange},
+              {icon:'📊',title:'Leadership Report',desc:'Monthly KPIs, trends & escalations',action:'leadership',accent:T.green},
+            ].map(q => (
+              <button key={q.action} onClick={() => nav(q.action)} style={{
+                background:T.white,border:`1px solid ${T.borderLight}`,borderLeft:`4px solid ${q.accent}`,
+                borderRadius:8,padding:'14px 16px',textAlign:'left',cursor:'pointer',
+                boxShadow:T.s1,transition:'box-shadow 150ms',fontFamily:T.font,
+              }}
+              onMouseEnter={e=>e.currentTarget.style.boxShadow=T.s2}
+              onMouseLeave={e=>e.currentTarget.style.boxShadow=T.s1}
+              >
+                <div style={{fontSize:18,marginBottom:3,lineHeight:1}}>{q.icon}</div>
+                <div style={{fontSize:13,fontWeight:700,color:T.text,marginBottom:1}}>{q.title}</div>
+                <div style={{fontSize:11,color:T.textMuted,lineHeight:1.4}}>{q.desc}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div style={{marginTop:48,paddingTop:24,borderTop:`1px solid ${T.borderLight}`,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <div style={{display:'flex',alignItems:'center',gap:10}}>
+            <div style={{background:T.red,width:24,height:24,borderRadius:2,display:'flex',alignItems:'center',justifyContent:'center'}}>
+              <span style={{color:'white',fontWeight:700,fontSize:8,fontFamily:T.font}}>LOR</span>
+            </div>
+            <div>
+              <div style={{fontSize:10,fontWeight:700,color:T.text,fontFamily:T.font,letterSpacing:1,textTransform:'uppercase'}}>The Power of Experience</div>
+              <div style={{fontSize:10,color:T.textMuted,fontFamily:T.font}}>Laing O'Rourke · Fremantle Bridges Alliance · Perth WA</div>
+            </div>
+          </div>
+          <div style={{fontSize:10,color:T.textMuted,fontFamily:T.font}}>© 2026 Laing O'Rourke. All rights reserved.</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+Object.assign(window, { Dashboard });
+
+
+
+'use strict';
+const { useState, useEffect } = React;
+
+const STEPS = ['Project & Context','Problem & Solution','Links & Attachments','Review & Submit'];
+
+const ProgressBar = ({ step, total }) => (
+  <div style={{marginBottom:28}}>
+    <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8}}>
+      <span style={{fontFamily:T.font,fontSize:12,color:T.textMuted,fontWeight:600}}>Step {step} of {total} — {STEPS[step-1]}</span>
+      <span style={{fontFamily:T.font,fontSize:12,color:T.textMuted}}>{Math.round((step/total)*100)}% complete</span>
+    </div>
+    <div style={{height:4,background:T.borderLight,borderRadius:2,overflow:'hidden'}}>
+      <div style={{height:'100%',width:`${(step/total)*100}%`,background:T.teal,borderRadius:2,transition:'width 400ms cubic-bezier(.4,0,.2,1)'}} />
+    </div>
+    <div style={{display:'flex',gap:0,marginTop:10}}>
+      {STEPS.map((s,i) => (
+        <div key={i} style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:4}}>
+          <div style={{width:24,height:24,borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:10,fontWeight:700,fontFamily:T.font,
+            background: i+1<step?T.teal:i+1===step?T.teal:'white',
+            color: i+1<=step?'white':T.textMuted,
+            border:`2px solid ${i+1<=step?T.teal:T.borderLight}`,
+            transition:'all 300ms',
+          }}>{i+1<step?'✓':i+1}</div>
+          <span style={{fontSize:9,color:i+1<=step?T.teal:T.textMuted,fontFamily:T.font,fontWeight:i+1===step?700:400,textAlign:'center',lineHeight:1.3}}>{s}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const Field = ({label,required,helper,error,children}) => (
+  <div style={{marginBottom:20}}>
+    <label style={{display:'block',fontFamily:T.font,fontSize:12,fontWeight:600,color:T.textSec,marginBottom:5,letterSpacing:.2}}>
+      {label} {required&&<span style={{color:T.red}}>*</span>}
+      {helper&&<span style={{fontWeight:400,color:T.textMuted,marginLeft:4}}>({helper})</span>}
+    </label>
+    {children}
+    {error&&<div style={{fontSize:11,color:T.red,fontFamily:T.font,marginTop:4}}>⚠ {error}</div>}
+  </div>
+);
+
+const Input = ({value,onChange,placeholder,disabled,readOnly,error}) => (
+  <input value={value} onChange={onChange} placeholder={placeholder} disabled={disabled} readOnly={readOnly}
+    style={{
+      width:'100%',height:40,padding:'8px 12px',fontFamily:T.font,fontSize:14,color:T.text,
+      border:`1px solid ${error?T.red:T.border}`,borderRadius:4,background:disabled||readOnly?T.bg:'white',
+      boxSizing:'border-box',outline:'none',cursor:disabled||readOnly?'not-allowed':'text',
+    }}
+    onFocus={e=>!disabled&&!readOnly&&(e.target.style.border=`1px solid ${T.teal}`,e.target.style.boxShadow=`0 0 0 3px rgba(0,167,181,.15)`)}
+    onBlur={e=>e.target.style.boxShadow='none'}
+  />
+);
+
+const Textarea = ({value,onChange,placeholder,rows=4,error}) => (
+  <textarea value={value} onChange={onChange} placeholder={placeholder} rows={rows}
+    style={{
+      width:'100%',padding:'10px 12px',fontFamily:T.font,fontSize:14,color:T.text,
+      border:`1px solid ${error?T.red:T.border}`,borderRadius:4,resize:'vertical',
+      boxSizing:'border-box',outline:'none',lineHeight:1.5,
+    }}
+    onFocus={e=>(e.target.style.border=`1px solid ${T.teal}`,e.target.style.boxShadow=`0 0 0 3px rgba(0,167,181,.15)`)}
+    onBlur={e=>e.target.style.boxShadow='none'}
+  />
+);
+
+const Select = ({value,onChange,options,error}) => (
+  <div style={{position:'relative'}}>
+    <select value={value} onChange={onChange}
+      style={{width:'100%',height:40,padding:'8px 36px 8px 12px',fontFamily:T.font,fontSize:14,color:value?T.text:T.textMuted,border:`1px solid ${error?T.red:T.border}`,borderRadius:4,background:'white',appearance:'none',boxSizing:'border-box',outline:'none',cursor:'pointer'}}
+      onFocus={e=>(e.target.style.border=`1px solid ${T.teal}`,e.target.style.boxShadow=`0 0 0 3px rgba(0,167,181,.15)`)}
+      onBlur={e=>e.target.style.boxShadow='none'}
+    >
+      {options.map(o=><option key={o.value||o} value={o.value||o}>{o.label||o}</option>)}
+    </select>
+    <span style={{position:'absolute',right:12,top:'50%',transform:'translateY(-50%)',pointerEvents:'none',color:T.textMuted,fontSize:12}}>▾</span>
+  </div>
+);
+
+const AutoSaveBadge = () => (
+  <span style={{fontFamily:T.font,fontSize:11,color:T.green,display:'flex',alignItems:'center',gap:4}}>
+    <span>✓</span> Draft auto-saved
+  </span>
+);
+
+const Step1 = ({data,setData,errors}) => (
+  <div>
+    <div style={{background:'#e3f2fd',border:`1px solid #90caf9`,borderRadius:6,padding:'10px 14px',marginBottom:20,fontFamily:T.font,fontSize:12,color:'#1565c0'}}>
+      ℹ Fields below are auto-populated from your profile. Edit if needed.
+    </div>
+    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:0}}>
+      <div style={{paddingRight:16}}>
+        <Field label="Project Name" required helper="auto-populated, editable">
+          <Select value={data.project} onChange={e=>setData({...data,project:e.target.value})} options={[
+            {value:'FBA',label:'Fremantle Bridges Alliance'},
+            {value:'other',label:'Other Project'},
+          ]} />
+        </Field>
+        <Field label="Sector" required helper="auto-populated" error={errors.sector}>
+          <Select value={data.sector} onChange={e=>setData({...data,sector:e.target.value})} error={errors.sector} options={[
+            {value:'',label:'Select sector…'},
+            {value:'Rail',label:'Rail'},
+            {value:'Roads',label:'Roads'},
+            {value:'Defence',label:'Defence'},
+            {value:'Delivery Partner',label:'Delivery Partner'},
+            {value:'Water',label:'Water'},
+            {value:'Energy',label:'Energy'},
+          ]} />
+        </Field>
+        <Field label="Site Location" required error={errors.location}>
+          <Input value={data.location} onChange={e=>setData({...data,location:e.target.value})} placeholder="e.g. North Pylon Pier 3" error={errors.location} />
+        </Field>
+      </div>
+      <div style={{paddingLeft:16,borderLeft:`1px solid ${T.borderLight}`}}>
+        <Field label="Submitter Name">
+          <Input value={data.submitter} readOnly />
+        </Field>
+        <Field label="Date" helper="auto-populated">
+          <Input value={data.date} readOnly />
+        </Field>
+        <Field label="Applicable Phase" required error={errors.phase}>
+          <Select value={data.phase} onChange={e=>setData({...data,phase:e.target.value})} error={errors.phase} options={[
+            {value:'',label:'Select phase…'},
+            {value:'Planning',label:'Planning'},
+            {value:'Design',label:'Design'},
+            {value:'Procurement & Supply',label:'Procurement & Supply'},
+            {value:'Construction',label:'Construction'},
+            {value:'Completion',label:'Completion'},
+          ]} />
+        </Field>
+      </div>
+    </div>
+  </div>
+);
+
+const Step2 = ({data,setData,errors}) => (
+  <div>
+    <Field label="Problem Statement" required helper="What is the safety issue you observed?" error={errors.problem}>
+      <Textarea value={data.problem} onChange={e=>setData({...data,problem:e.target.value})} placeholder="Describe the hazard or safety gap. Be specific about location, task, and who is at risk." rows={5} error={errors.problem} />
+    </Field>
+    <Field label="Proposed Solution" required helper="How does your idea address the problem?" error={errors.solution}>
+      <Textarea value={data.solution} onChange={e=>setData({...data,solution:e.target.value})} placeholder="Describe your proposed engineered safety solution. Include how it would be implemented." rows={5} error={errors.solution} />
+    </Field>
+    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
+      <Field label="Expected Health Benefit" required error={errors.benefit}>
+        <Select value={data.benefit} onChange={e=>setData({...data,benefit:e.target.value})} error={errors.benefit} options={[
+          {value:'',label:'Select benefit…'},
+          {value:'Eliminate hazard',label:'Eliminate hazard'},
+          {value:'Reduce fall risk',label:'Reduce fall risk'},
+          {value:'Reduce struck-by risk',label:'Reduce struck-by risk'},
+          {value:'Reduce manual handling',label:'Reduce manual handling'},
+          {value:'Improve visibility/lighting',label:'Improve visibility/lighting'},
+          {value:'Reduce dust/noise exposure',label:'Reduce dust/noise exposure'},
+          {value:'Other',label:'Other'},
+        ]} />
+      </Field>
+      <Field label="Risk Level Addressed" required>
+        <Select value={data.risk} onChange={e=>setData({...data,risk:e.target.value})} options={[
+          {value:'',label:'Select level…'},
+          {value:'Critical',label:'Critical (life-threatening)'},
+          {value:'High',label:'High (serious injury likely)'},
+          {value:'Medium',label:'Medium (injury possible)'},
+          {value:'Low',label:'Low (minor inconvenience)'},
+        ]} />
+      </Field>
+    </div>
+    {/* File Upload */}
+    <Field label="Supporting Files" helper="Optional — photos, drawings, videos">
+      <div style={{
+        border:`2px dashed ${data.files.length?T.teal:T.border}`,borderRadius:6,
+        padding:'28px 24px',textAlign:'center',background:T.bg,cursor:'pointer',transition:'all 150ms',
+      }}
+      onMouseEnter={e=>(e.currentTarget.style.border=`2px dashed ${T.teal}`,e.currentTarget.style.background='#e6f7f8')}
+      onMouseLeave={e=>(e.currentTarget.style.border=`2px dashed ${data.files.length?T.teal:T.border}`,e.currentTarget.style.background=T.bg)}
+      onClick={()=>setData({...data,files:[...data.files,`Image_${Date.now()}.jpg`]})}
+      >
+        <div style={{fontSize:28,marginBottom:8}}>📎</div>
+        <div style={{fontFamily:T.font,fontSize:13,color:T.textSec,fontWeight:500}}>Drag & drop files here, or click to select</div>
+        <div style={{fontFamily:T.font,fontSize:11,color:T.textMuted,marginTop:4}}>PDF, DOCX, JPG, PNG, MP4 — max 100MB per file</div>
+      </div>
+      {data.files.length>0&&(
+        <div style={{marginTop:10,display:'flex',flexDirection:'column',gap:6}}>
+          {data.files.map((f,i)=>(
+            <div key={i} style={{display:'flex',alignItems:'center',gap:10,background:'#ecfae3',border:`1px solid #c3e6cb`,borderRadius:4,padding:'8px 12px'}}>
+              <span style={{fontSize:14}}>📄</span>
+              <span style={{flex:1,fontFamily:T.font,fontSize:12,color:T.text}}>{f}</span>
+              <span style={{fontSize:11,color:T.green,fontWeight:600,fontFamily:T.font}}>✓ Ready</span>
+              <button onClick={e=>{e.stopPropagation();setData({...data,files:data.files.filter((_,j)=>j!==i)})}} style={{background:'none',border:'none',cursor:'pointer',color:T.textMuted,fontSize:16,lineHeight:1}}>×</button>
+            </div>
+          ))}
+        </div>
+      )}
+    </Field>
+  </div>
+);
+
+const FSR_OPTIONS = [
+  'Confined Space',
+  'Cranes and Lifting',
+  'Demolition',
+  'Excavation',
+  'Formwork & Falsework',
+  'General Electrical Safety',
+  'Hazardous Dust & Fibres',
+  'Hazardous Energy',
+  'Heavy Vehicles',
+  'Plant and Equipment',
+  'Piling',
+  'Precast Concrete',
+  'Prevention of Falls & Dropped Objects',
+  'Scaffolding',
+  'Traffic Management',
+  'Work in Rail Environments',
+  'Work In, Over and Adjacent to Water',
+];
+
+const Step3 = ({data,setData}) => (
+  <div>
+    <Field label="FSR Category" helper="Select all relevant Fatal & Severe Risk categories" required>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8}}>
+        {FSR_OPTIONS.map(fsr=>{
+          const checked = data.fsrs.includes(fsr);
+          return (
+            <label key={fsr} onClick={()=>setData({...data,fsrs:checked?data.fsrs.filter(f=>f!==fsr):[...data.fsrs,fsr]})}
+              style={{
+                display:'flex',alignItems:'center',gap:8,padding:'10px 12px',cursor:'pointer',
+                borderRadius:6,border:`2px solid ${checked?T.teal:T.borderLight}`,
+                background:checked?'#e6f7f8':'white',transition:'all 120ms',userSelect:'none',
+              }}
+              onMouseEnter={e=>{if(!checked)e.currentTarget.style.borderColor=T.border;}}
+              onMouseLeave={e=>{if(!checked)e.currentTarget.style.borderColor=T.borderLight;}}
+            >
+              <div style={{
+                width:18,height:18,borderRadius:4,flexShrink:0,
+                border:`2px solid ${checked?T.teal:T.border}`,
+                background:checked?T.teal:'white',
+                display:'flex',alignItems:'center',justifyContent:'center',transition:'all 120ms',
+              }}>
+                {checked&&<span style={{color:'white',fontSize:10,fontWeight:700,lineHeight:1}}>✓</span>}
+              </div>
+              <span style={{fontFamily:T.font,fontSize:12,color:checked?T.teal:T.text,fontWeight:checked?600:400,lineHeight:1.3}}>{fsr}</span>
+            </label>
+          );
+        })}
+      </div>
+    </Field>
+    {data.fsrs.length>0&&(
+      <div style={{display:'flex',gap:6,flexWrap:'wrap',marginTop:-8,marginBottom:20}}>
+        {data.fsrs.map(f=>(
+          <span key={f} style={{background:'#e6f7f8',color:T.teal,border:`1px solid #b2dfdb`,padding:'3px 10px',borderRadius:12,fontSize:11,fontFamily:T.font,fontWeight:600,display:'flex',alignItems:'center',gap:4}}>
+            {f.split(':')[0]}
+            <button onClick={()=>setData({...data,fsrs:data.fsrs.filter(x=>x!==f)})} style={{background:'none',border:'none',cursor:'pointer',color:T.teal,fontSize:14,lineHeight:1,padding:0}}>×</button>
+          </span>
+        ))}
+      </div>
+    )}
+    <Field label="Linked PC1 Incident" helper="Optional — paste PC1 reference number">
+      <Input value={data.pc1} onChange={e=>setData({...data,pc1:e.target.value})} placeholder="e.g. PC1-2026-0142" />
+    </Field>
+    <Field label="Success Metrics" helper="Optional — how will effectiveness be measured?">
+      <Textarea value={data.metrics} onChange={e=>setData({...data,metrics:e.target.value})} placeholder="e.g. Reduce fall incidents by 50% on Pier 3 deck works within 3 months of implementation." rows={3} />
+    </Field>
+  </div>
+);
+
+const Step4 = ({data}) => (
+  <div>
+    <div style={{background:'#e3f2fd',border:`1px solid #90caf9`,borderRadius:6,padding:'12px 16px',marginBottom:24,fontFamily:T.font,fontSize:12,color:'#1565c0'}}>
+      Please review your submission before sending. You can go back to edit any section.
+    </div>
+    {[
+      {label:'Project',value:data.project==='FBA'?'Fremantle Bridges Alliance':data.project},
+      {label:'Sector',value:data.sector},
+      {label:'Location',value:data.location},
+      {label:'Phase',value:data.phase},
+      {label:'Problem',value:data.problem,long:true},
+      {label:'Solution',value:data.solution,long:true},
+      {label:'Health Benefit',value:data.benefit},
+      {label:'Risk Level',value:data.risk},
+      {label:'FSR Categories',value:data.fsrs.join(', ')||'—'},
+      {label:'Attachments',value:data.files.length?data.files.join(', '):'None'},
+    ].map(r=>(
+      <div key={r.label} style={{display:'grid',gridTemplateColumns:'160px 1fr',gap:0,borderBottom:`1px solid ${T.borderLight}`,padding:'10px 0'}}>
+        <span style={{fontFamily:T.font,fontSize:12,fontWeight:600,color:T.textMuted,textTransform:'uppercase',letterSpacing:.5,paddingTop:1}}>{r.label}</span>
+        <span style={{fontFamily:T.font,fontSize:13,color:T.text,lineHeight:1.5}}>{r.value||<span style={{color:T.textMuted,fontStyle:'italic'}}>Not provided</span>}</span>
+      </div>
+    ))}
+  </div>
+);
+
+const SubmitForm = ({ nav, showToast }) => {
+  const [step, setStep] = useState(1);
+  const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [data, setData] = useState({
+    project:'FBA', sector:'Rail', location:'', submitter:'Jake Anderson',
+    date:'29 Apr 2026', phase:'', problem:'', solution:'', benefit:'', risk:'',
+    files:[], fsrs:[], pc1:'', metrics:'',
+  });
+
+  const validate = () => {
+    const e = {};
+    if(step===1){ if(!data.sector)e.sector='Please select a sector'; if(!data.location)e.location='Please enter site location'; if(!data.phase)e.phase='Please select a phase'; }
+    if(step===2){ if(!data.problem||data.problem.length<20)e.problem='Please describe the problem (min 20 characters)'; if(!data.solution||data.solution.length<20)e.solution='Please describe the solution (min 20 characters)'; if(!data.benefit)e.benefit='Please select the expected health benefit'; }
+    if(step===3){ if(!data.fsrs.length)e.fsrs='Please select at least one FSR category'; }
+    setErrors(e);
+    return !Object.keys(e).length;
+  };
+
+  const next = () => { if(validate()) setStep(s=>Math.min(s+1,4)); };
+  const back = () => { setErrors({}); setStep(s=>Math.max(s-1,1)); };
+
+  const submit = () => {
+    setSubmitted(true);
+    showToast('✓ Idea ES-248 submitted successfully! Routing to your ESL for review.','success');
+  };
+
+  if(submitted) return (
+    <div style={{background:T.bg,minHeight:'calc(100vh - 64px)',display:'flex',alignItems:'center',justifyContent:'center',padding:32}}>
+      <div style={{background:T.white,borderRadius:12,padding:'48px 40px',maxWidth:520,textAlign:'center',boxShadow:T.s2}}>
+        <div style={{width:64,height:64,background:'#ecfae3',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',fontSize:28}}>✓</div>
+        <h2 style={{fontFamily:T.font,fontSize:22,fontWeight:700,color:T.text,margin:'0 0 8px'}}>Idea Submitted!</h2>
+        <div style={{fontFamily:T.font,fontSize:13,color:T.textMuted,marginBottom:6}}>Your submission has been assigned reference number</div>
+        <div style={{fontFamily:T.font,fontSize:20,fontWeight:700,color:T.teal,marginBottom:16}}>ES-248</div>
+        <p style={{fontFamily:T.font,fontSize:13,color:T.textSec,lineHeight:1.6,marginBottom:28}}>Your idea has been sent to your Engineering Safety Lead for initial review. You'll receive an email notification when its status changes.</p>
+        <div style={{display:'flex',gap:12,justifyContent:'center',flexWrap:'wrap'}}>
+          <Btn onClick={() => { setSubmitted(false); setStep(1); setData({project:'FBA',sector:'Rail',location:'',submitter:'Jake Anderson',date:'29 Apr 2026',phase:'',problem:'',solution:'',benefit:'',risk:'',files:[],fsrs:[],pc1:'',metrics:''}); }}>Submit Another</Btn>
+          <Btn variant="secondary" onClick={() => nav('dashboard')}>Back to Dashboard</Btn>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div style={{background:T.bg,minHeight:'calc(100vh - 64px)',padding:'28px 32px'}}>
+      <div style={{maxWidth:800,margin:'0 auto'}}>
+        <div style={{fontFamily:T.font,fontSize:11,color:T.textMuted,marginBottom:12}}>Home › Submit New Idea</div>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24}}>
+          <div>
+            <h1 style={{fontFamily:T.font,fontSize:22,fontWeight:700,color:T.text,margin:0}}>Submit a Safety Idea</h1>
+            <p style={{fontFamily:T.font,fontSize:13,color:T.textMuted,margin:'4px 0 0'}}>Fremantle Bridges Alliance · FBA</p>
+          </div>
+          <AutoSaveBadge />
+        </div>
+
+        <Card>
+          <ProgressBar step={step} total={4} />
+
+          {Object.keys(errors).length>0&&(
+            <div style={{background:'#fce4ec',border:`1px solid ${T.red}`,borderRadius:6,padding:'12px 16px',marginBottom:20}}>
+              <div style={{fontFamily:T.font,fontSize:13,fontWeight:600,color:T.red,marginBottom:6}}>Please fix the following errors:</div>
+              {Object.values(errors).map((e,i)=><div key={i} style={{fontFamily:T.font,fontSize:12,color:T.red}}>• {e}</div>)}
+            </div>
+          )}
+
+          {step===1&&<Step1 data={data} setData={setData} errors={errors} />}
+          {step===2&&<Step2 data={data} setData={setData} errors={errors} />}
+          {step===3&&<Step3 data={data} setData={setData} errors={errors} />}
+          {step===4&&<Step4 data={data} errors={errors} />}
+
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:28,paddingTop:20,borderTop:`1px solid ${T.borderLight}`}}>
+            <div style={{display:'flex',gap:10}}>
+              {step>1&&<Btn variant="ghost" onClick={back}>← Back</Btn>}
+              <Btn variant="secondary" onClick={() => showToast('Draft saved. You can resume any time.','info')}>Save Draft</Btn>
+            </div>
+            <div style={{display:'flex',gap:10}}>
+              {step<4
+                ? <Btn onClick={next}>Next Step →</Btn>
+                : <Btn onClick={submit}>Submit Idea ✓</Btn>
+              }
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+Object.assign(window, { SubmitForm });
+
+
+
+'use strict';
+const { useState, useMemo } = React;
+
+const SOLUTIONS = [
+  {id:'ES-246',title:'Rebar Cage Safety Netting',summary:'Tensioned polyethylene netting beneath rebar cages eliminates dropped-object risk during vertical pour operations.',sector:'Rail',status:'Approved',phase:'Construction',rating:4.7,ratingCount:31,submitter:'M. Chen',date:'28 Apr 2026',fsrCat:'FSR-002',tags:['LOR Preferred'],description:'Workers on the FBA project identified a dropped-object hazard during rebar cage assembly over live traffic corridors. This solution involves installing tensioned HDPE netting systems below all vertical rebar cages during assembly. The netting is rated to 250kg and can be deployed in under 15 minutes by two workers. Zero dropped-object incidents recorded since implementation.',evidence:'Deployed on Pier 3, Pier 4, and Pier 5 deck works. Photo documentation available.'},
+  {id:'ES-244',title:'PPE QR-Code Tracking System',summary:'QR-coded PPE items linked to worker profiles enable real-time compliance monitoring via kiosk scan.',sector:'Roads',status:'Approved',phase:'Construction',rating:4.5,ratingCount:18,submitter:'J. Walsh',date:'25 Apr 2026',fsrCat:'FSR-007',tags:['Case Study'],description:'Non-compliance with PPE requirements at deck-level access points was identified as a recurring issue. Each helmet, harness and vest is assigned a unique QR code linked to the worker\'s profile. Kiosk scanners at site access gates verify compliance before workers can enter elevated work zones. Compliance rates increased from 72% to 98% in 6 weeks.',evidence:'Case study report available. Deployed at all four main pylon access points.'},
+  {id:'ES-241',title:'Modular Deck Edge Barrier',summary:'Quick-clip modular barriers deploy in under 5 minutes and exceed AS 1657 requirements for work-at-height edge protection.',sector:'Defence',status:'Approved',phase:'Construction',rating:4.8,ratingCount:43,submitter:'S. Thompson',date:'20 Apr 2026',fsrCat:'FSR-001',tags:['LOR Preferred','Case Study'],description:'Traditional timber edge-barriers required 45 minutes to install and were frequently damaged during concrete pours. The modular system uses interlocking aluminium sections with quick-clip base anchors. Each section weighs 8kg and can be moved by one worker. System complies with AS 1657 and has been tested to 900N lateral load.',evidence:'Full case study available. Cost saving: $2,400/week vs. previous system.'},
+  {id:'ES-238',title:'Concrete Pour Proximity Sensor',summary:'Ultrasonic sensors create an exclusion zone around concrete pump booms, halting movement when workers enter the 3m radius.',sector:'Water',status:'Approved',phase:'Construction',rating:4.3,ratingCount:12,submitter:'A. Patel',date:'15 Apr 2026',fsrCat:'FSR-007',tags:[],description:'Concrete pump boom strikes were identified as a high-potential incident risk. Ultrasonic proximity sensors mounted at 1m intervals along the boom detect personnel within 3m and trigger an automatic hydraulic stop. Workers must press a reset button after the boom is repositioned. Reduces struck-by risk from concrete pump operations to near-zero.',evidence:'Installed on 2 of 3 concrete pumps. Incident near-miss reduction: 100% in 3 months.'},
+  {id:'ES-235',title:'Night Works Lighting Matrix',summary:'LED matrix system provides 500-lux task illumination across the full deck span, eliminating shadow zones during night pours.',sector:'Energy',status:'Approved',phase:'Construction',rating:4.1,ratingCount:9,submitter:'R. Davis',date:'10 Apr 2026',fsrCat:'FSR-007',tags:[],description:'Night concrete pours required temporary lighting that left shadow zones between fixtures, creating trip and fall hazards. The LED matrix uses programmable positioning to eliminate all shadow zones across a 40m deck span. Lighting levels maintained at 500 lux per AS/NZS 1680.',evidence:''},
+  {id:'ES-233',title:'Pre-Cast Deck Safe-Lift Protocol',summary:'Colour-coded rigging inspection tags and a two-person sign-off system prevent pre-cast deck panel lift errors.',sector:'Delivery Partner',status:'Approved',phase:'Construction',rating:4.6,ratingCount:22,submitter:'P. Kumar',date:'7 Apr 2026',fsrCat:'FSR-006',tags:['LOR Preferred'],description:'Pre-cast deck panel lifts present collapse and dropped-load risks. The protocol requires: (1) colour-coded tag inspection — green tags on all rigging; (2) independent two-person sign-off before each lift; (3) exclusion zone delineation by dogman. Zero lift incidents since implementation across 47 deck panel installations.',evidence:''},
+  {id:'ES-230',title:'Dust Suppression Auto-Mist',summary:'Automated misting ring on concrete saws activates when ambient dust exceeds 2mg/m³, maintaining safe silica exposure levels.',sector:'Rail',status:'Under Review',phase:'Construction',rating:0,ratingCount:0,submitter:'T. Nguyen',date:'2 Apr 2026',fsrCat:'FSR-007',tags:[],description:'Concrete cutting operations generate respirable crystalline silica dust exceeding WES limits. The misting ring attaches to any concrete saw and is triggered by an integrated dust sensor. Water consumption is 4L/hr. Preliminary testing shows 94% dust reduction.',evidence:''},
+  {id:'ES-228',title:'Formwork Failure Early Warning',summary:'Vibration sensors on formwork shoring detect deflection events 30+ seconds before threshold breach, allowing safe evacuation.',sector:'Roads',status:'Under Review',phase:'Construction',rating:0,ratingCount:0,submitter:'L. Park',date:'28 Mar 2026',fsrCat:'FSR-006',tags:[],description:'Formwork and shoring systems present a collapse risk, particularly during concrete curing. IoT vibration and displacement sensors attached to shoring legs continuously monitor for deflection anomalies. Alert triggers site-wide audible alarm 30+ seconds before predicted failure, providing evacuation time.',evidence:''},
+  {id:'ES-225',title:'Bridge Pier Working Platform',summary:'Cantilevered aluminium platform system for pier cap works eliminates the need for scaffolding and reduces assembly time by 60%.',sector:'Defence',status:'Approved',phase:'Construction',rating:4.4,ratingCount:15,submitter:'B. Williams',date:'22 Mar 2026',fsrCat:'FSR-001',tags:[],description:'Access to pier cap reinforcement zones required complex scaffold erection over water, taking 3 days per pier. The cantilevered aluminium platform brackets attach to cast-in anchor points and support a full 3m × 4m work platform. Certified to 450kg UDL. System is demountable and reusable across all piers.',evidence:'Deployed at Piers 1–4. Scaffold cost saving: $18,000 per pier.'},
+];
+
+const SolutionModal = ({sol,onClose,showToast}) => {
+  const [comment,setComment] = useState('');
+  const [comments,setComments] = useState([
+    {user:'K. McDonald',role:'ESL',text:'Excellent solution — recommend for all overhead works going forward.',date:'22 Apr 2026'},
+    {user:'S. Thompson',role:'Submitter',text:'Thanks! Happy to present at the next safety standup if needed.',date:'23 Apr 2026'},
+  ]);
+  if(!sol) return null;
+  return (
+    <div style={{position:'fixed',inset:0,zIndex:2000,display:'flex',alignItems:'flex-start',justifyContent:'center',paddingTop:40}} onClick={onClose}>
+      <div style={{position:'absolute',inset:0,background:'rgba(0,0,0,.55)'}} />
+      <div onClick={e=>e.stopPropagation()} style={{
+        position:'relative',background:T.white,borderRadius:10,
+        width:'100%',maxWidth:720,maxHeight:'85vh',
+        display:'flex',flexDirection:'column',boxShadow:T.s3,margin:'0 16px',
+      }}>
+        {/* Modal Header */}
+        <div style={{padding:'20px 24px',borderBottom:`1px solid ${T.borderLight}`,display:'flex',gap:12,alignItems:'flex-start',flexShrink:0}}>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:T.font,fontSize:10,color:T.textMuted,marginBottom:4}}>{sol.id} · {sol.fsrCat}</div>
+            <h2 style={{fontFamily:T.font,fontSize:18,fontWeight:700,color:T.text,margin:'0 0 8px',lineHeight:1.3}}>{sol.title}</h2>
+            <div style={{display:'flex',gap:8,flexWrap:'wrap',alignItems:'center'}}>
+              <StatusBadge status={sol.status} />
+              <SectorTag sector={sol.sector} />
+              {sol.tags.map(t=><StatusBadge key={t} status={t} />)}
+              {sol.rating>0&&<Stars rating={sol.rating} count={sol.ratingCount} />}
+            </div>
+          </div>
+          <button onClick={onClose} style={{background:'none',border:'none',cursor:'pointer',fontSize:22,color:T.textMuted,lineHeight:1,padding:'2px 6px',borderRadius:4,flexShrink:0}}
+          onMouseEnter={e=>e.currentTarget.style.color=T.red}
+          onMouseLeave={e=>e.currentTarget.style.color=T.textMuted}
+          >×</button>
+        </div>
+
+        {/* Modal Body */}
+        <div style={{flex:1,overflowY:'auto',padding:'20px 24px'}}>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24,marginBottom:20}}>
+            <div>
+              <div style={{fontFamily:T.font,fontSize:10,fontWeight:700,color:T.textMuted,textTransform:'uppercase',letterSpacing:.8,marginBottom:6}}>Problem</div>
+              <p style={{fontFamily:T.font,fontSize:13,color:T.textSec,lineHeight:1.6,margin:0}}>{sol.description.substring(0,180)}…</p>
+            </div>
+            <div>
+              <div style={{fontFamily:T.font,fontSize:10,fontWeight:700,color:T.textMuted,textTransform:'uppercase',letterSpacing:.8,marginBottom:6}}>Proposed Solution</div>
+              <p style={{fontFamily:T.font,fontSize:13,color:T.textSec,lineHeight:1.6,margin:0}}>{sol.description.substring(180,360)}…</p>
+            </div>
+          </div>
+
+          {/* Image placeholder */}
+          <div style={{background:T.bg,borderRadius:6,height:140,display:'flex',alignItems:'center',justifyContent:'center',marginBottom:20,border:`1px dashed ${T.border}`}}>
+            <div style={{textAlign:'center',color:T.textMuted,fontFamily:'monospace',fontSize:11}}>
+              <div style={{fontSize:24,marginBottom:4}}>📷</div>
+              site photography / supporting documents
+            </div>
+          </div>
+
+          {/* Meta Grid */}
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:20}}>
+            {[
+              {k:'Sector',v:<SectorTag sector={sol.sector} />},
+              {k:'Phase',v:sol.phase},
+              {k:'Submitted by',v:sol.submitter},
+              {k:'Date',v:sol.date},
+              {k:'FSR Category',v:sol.fsrCat},
+              {k:'Evidence',v:sol.evidence||'Not yet documented'},
+            ].map(r=>(
+              <div key={r.k} style={{padding:'8px 12px',background:T.bg,borderRadius:4}}>
+                <div style={{fontFamily:T.font,fontSize:10,fontWeight:600,color:T.textMuted,textTransform:'uppercase',letterSpacing:.5,marginBottom:3}}>{r.k}</div>
+                <div style={{fontFamily:T.font,fontSize:12,color:T.text}}>{r.v}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Comments */}
+          <div style={{borderTop:`1px solid ${T.borderLight}`,paddingTop:16}}>
+            <div style={{fontFamily:T.font,fontSize:13,fontWeight:600,color:T.text,marginBottom:12}}>Comments ({comments.length})</div>
+            {comments.map((c,i)=>(
+              <div key={i} style={{display:'flex',gap:10,marginBottom:14}}>
+                <div style={{width:32,height:32,borderRadius:'50%',background:T.teal,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,fontSize:10,fontWeight:700,color:'white',fontFamily:T.font}}>{c.user.split(' ').map(n=>n[0]).join('')}</div>
+                <div style={{flex:1}}>
+                  <div style={{display:'flex',gap:8,alignItems:'baseline',marginBottom:3}}>
+                    <span style={{fontFamily:T.font,fontSize:12,fontWeight:700,color:T.text}}>{c.user}</span>
+                    <span style={{fontFamily:T.font,fontSize:10,color:T.textMuted}}>{c.role}</span>
+                    <span style={{fontFamily:T.font,fontSize:10,color:T.textMuted,marginLeft:'auto'}}>{c.date}</span>
+                  </div>
+                  <div style={{fontFamily:T.font,fontSize:13,color:T.textSec,lineHeight:1.5,background:T.bg,borderRadius:6,padding:'8px 12px'}}>{c.text}</div>
+                </div>
+              </div>
+            ))}
+            <div style={{display:'flex',gap:8,marginTop:4}}>
+              <input value={comment} onChange={e=>setComment(e.target.value)} placeholder="Add a comment…"
+                style={{flex:1,height:36,padding:'7px 12px',fontFamily:T.font,fontSize:13,border:`1px solid ${T.border}`,borderRadius:4,outline:'none'}}
+                onFocus={e=>(e.target.style.border=`1px solid ${T.teal}`)}
+                onBlur={e=>(e.target.style.border=`1px solid ${T.border}`)}
+                onKeyDown={e=>{if(e.key==='Enter'&&comment.trim()){setComments(p=>[...p,{user:'Jake Anderson',role:'ESL',text:comment,date:'29 Apr 2026'}]);setComment('');showToast('Comment posted.','info');}}}
+              />
+              <Btn size="sm" variant="teal" onClick={()=>{if(comment.trim()){setComments(p=>[...p,{user:'Jake Anderson',role:'ESL',text:comment,date:'29 Apr 2026'}]);setComment('');showToast('Comment posted.','info');}}}>Post</Btn>
+            </div>
+          </div>
+        </div>
+
+        {/* Modal Footer */}
+        <div style={{padding:'14px 24px',borderTop:`1px solid ${T.borderLight}`,display:'flex',gap:10,justifyContent:'flex-end',flexShrink:0,background:T.bg}}>
+          <Btn variant="secondary" size="sm" onClick={()=>showToast('Added to workspace.','success')}>Save to Workspace</Btn>
+          <Btn variant="ghost" size="sm" onClick={()=>showToast('Generating PDF export…','info')}>Export PDF</Btn>
+          <Btn variant="ghost" size="sm" onClick={()=>showToast('Opening support request…','info')}>Contact Support</Btn>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const SECTORS = ['Rail','Roads','Defence','Water','Energy','Delivery Partner'];
+const STATUSES = ['Approved','Under Review','Submitted'];
+const PHASES = ['Planning','Design','Procurement & Supply','Construction','Completion'];
+
+const SearchResults = ({ nav, showToast }) => {
+  const [q, setQ] = useState('');
+  const [sectors, setSectors] = useState([]);
+  const [statuses, setStatuses] = useState([]);
+  const [phases, setPhases] = useState([]);
+  const [sortBy, setSortBy] = useState('Relevance');
+  const [view, setView] = useState('grid');
+  const [selected, setSelected] = useState(null);
+
+  const toggle = (arr, setArr, val) => setArr(a => a.includes(val) ? a.filter(x=>x!==val) : [...a, val]);
+
+  const filtered = useMemo(() => {
+    let r = SOLUTIONS;
+    if(q) r = r.filter(s => s.title.toLowerCase().includes(q.toLowerCase()) || s.summary.toLowerCase().includes(q.toLowerCase()));
+    if(sectors.length) r = r.filter(s => sectors.includes(s.sector));
+    if(statuses.length) r = r.filter(s => statuses.includes(s.status));
+    if(phases.length) r = r.filter(s => phases.includes(s.phase));
+    if(sortBy==='Effectiveness') r = [...r].sort((a,b) => b.rating - a.rating);
+    if(sortBy==='Newest') r = [...r].sort((a,b) => b.id.localeCompare(a.id));
+    if(sortBy==='Oldest') r = [...r].sort((a,b) => a.id.localeCompare(b.id));
+    return r;
+  }, [q, sectors, statuses, phases, sortBy]);
+
+  const activeChips = [...sectors.map(s=>({label:s,remove:()=>setSectors(a=>a.filter(x=>x!==s))})), ...statuses.map(s=>({label:s,remove:()=>setStatuses(a=>a.filter(x=>x!==s))})), ...phases.map(s=>({label:s,remove:()=>setPhases(a=>a.filter(x=>x!==s))}))];
+  const clearAll = () => { setSectors([]); setStatuses([]); setPhases([]); setQ(''); };
+
+  const FilterGroup = ({title,options,selected,onToggle}) => {
+    const [open,setOpen] = useState(true);
+    return (
+      <div style={{borderBottom:`1px solid ${T.borderLight}`,paddingBottom:12,marginBottom:12}}>
+        <button onClick={()=>setOpen(p=>!p)} style={{width:'100%',display:'flex',justifyContent:'space-between',background:'none',border:'none',cursor:'pointer',padding:'4px 0',fontFamily:T.font,fontSize:12,fontWeight:700,color:T.text,textTransform:'uppercase',letterSpacing:.6}}>
+          {title} <span style={{color:T.textMuted,fontWeight:400,fontSize:14}}>{open?'−':'+'}</span>
+        </button>
+        {open && options.map(opt=>(
+          <label key={opt} style={{display:'flex',alignItems:'center',gap:8,padding:'5px 0',cursor:'pointer'}}>
+            <input type="checkbox" checked={selected.includes(opt)} onChange={()=>onToggle(opt)}
+              style={{width:15,height:15,accentColor:T.teal,cursor:'pointer'}} />
+            <span style={{fontFamily:T.font,fontSize:13,color:T.text}}>{opt}</span>
+            <span style={{marginLeft:'auto',fontFamily:T.font,fontSize:10,color:T.textMuted}}>
+              {SOLUTIONS.filter(s=>s.sector===opt||s.status===opt||s.phase===opt).length}
+            </span>
+          </label>
+        ))}
+      </div>
+    );
+  };
+
+  const SolCard = ({sol}) => (
+    <div onClick={()=>setSelected(sol)} style={{
+      background:T.white,borderRadius:8,border:`1px solid ${T.borderLight}`,
+      overflow:'hidden',cursor:'pointer',transition:'all 180ms',boxShadow:T.s1,
+      display:'flex',flexDirection:'column',
+    }}
+    onMouseEnter={e=>{e.currentTarget.style.boxShadow=T.s2;e.currentTarget.style.transform='translateY(-2px)'}}
+    onMouseLeave={e=>{e.currentTarget.style.boxShadow=T.s1;e.currentTarget.style.transform='translateY(0)'}}
+    >
+      <div style={{height:110,background:`linear-gradient(135deg, ${SECTOR_COLORS[sol.sector]||'#666'}22, ${SECTOR_COLORS[sol.sector]||'#666'}44)`,display:'flex',alignItems:'center',justifyContent:'center',borderBottom:`1px solid ${T.borderLight}`,position:'relative'}}>
+        <span style={{fontSize:32,opacity:.5}}>🔧</span>
+        <div style={{position:'absolute',top:8,left:8,display:'flex',gap:4,flexWrap:'wrap'}}>
+          {sol.tags.map(t=><StatusBadge key={t} status={t} />)}
+        </div>
+      </div>
+      <div style={{padding:'14px 16px',flex:1,display:'flex',flexDirection:'column',gap:8}}>
+        <div style={{fontFamily:T.font,fontSize:14,fontWeight:700,color:T.teal,lineHeight:1.3}}>{sol.title}</div>
+        <div style={{fontFamily:T.font,fontSize:11.5,color:T.textMuted,fontStyle:'italic',lineHeight:1.45,flex:1}}>{sol.summary}</div>
+        <div style={{display:'flex',gap:6,flexWrap:'wrap',alignItems:'center'}}>
+          <SectorTag sector={sol.sector} />
+          <StatusBadge status={sol.status} />
+        </div>
+        {sol.rating>0&&<Stars rating={sol.rating} count={sol.ratingCount} size={13} />}
+        <div style={{fontFamily:T.font,fontSize:10,color:T.textMuted,marginTop:2}}>{sol.submitter} · {sol.date}</div>
+      </div>
+      <div style={{padding:'10px 16px',borderTop:`1px solid ${T.borderLight}`,background:T.bg}}>
+        <button onClick={e=>{e.stopPropagation();setSelected(sol)}} style={{width:'100%',background:'none',border:`1px solid ${T.teal}`,borderRadius:4,padding:'7px',fontFamily:T.font,fontSize:12,fontWeight:600,color:T.teal,cursor:'pointer',transition:'all 120ms'}}
+        onMouseEnter={e=>{e.currentTarget.style.background=T.teal;e.currentTarget.style.color='white'}}
+        onMouseLeave={e=>{e.currentTarget.style.background='none';e.currentTarget.style.color=T.teal}}
+        >View Details →</button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div style={{background:T.bg,minHeight:'calc(100vh - 64px)',display:'flex'}}>
+      {/* Sidebar */}
+      <div style={{width:264,flexShrink:0,background:T.white,borderRight:`1px solid ${T.borderLight}`,padding:'20px 20px',position:'sticky',top:64,height:'calc(100vh - 64px)',overflowY:'auto'}}>
+        <div style={{fontFamily:T.font,fontSize:14,fontWeight:700,color:T.text,marginBottom:14}}>Refine Results</div>
+        <div style={{position:'relative',marginBottom:16}}>
+          <input value={q} onChange={e=>setQ(e.target.value)} placeholder="Search solutions…"
+            style={{width:'100%',height:36,padding:'7px 32px 7px 10px',fontFamily:T.font,fontSize:13,border:`1px solid ${T.border}`,borderRadius:4,boxSizing:'border-box',outline:'none'}}
+            onFocus={e=>e.target.style.border=`1px solid ${T.teal}`}
+            onBlur={e=>e.target.style.border=`1px solid ${T.border}`}
+          />
+          {q&&<button onClick={()=>setQ('')} style={{position:'absolute',right:8,top:'50%',transform:'translateY(-50%)',background:'none',border:'none',cursor:'pointer',color:T.textMuted,fontSize:16}}>×</button>}
+        </div>
+        <FilterGroup title="Sector" options={SECTORS} selected={sectors} onToggle={v=>toggle(sectors,setSectors,v)} />
+        <FilterGroup title="Status" options={STATUSES} selected={statuses} onToggle={v=>toggle(statuses,setStatuses,v)} />
+        <FilterGroup title="Phase" options={PHASES} selected={phases} onToggle={v=>toggle(phases,setPhases,v)} />
+        {(sectors.length||statuses.length||phases.length||q)
+          ? <button onClick={clearAll} style={{width:'100%',padding:'9px',background:'none',border:`1px solid ${T.border}`,borderRadius:4,fontFamily:T.font,fontSize:12,color:T.textMuted,cursor:'pointer',marginTop:4}}
+          onMouseEnter={e=>{e.currentTarget.style.borderColor=T.red;e.currentTarget.style.color=T.red}}
+          onMouseLeave={e=>{e.currentTarget.style.borderColor=T.border;e.currentTarget.style.color=T.textMuted}}>Clear All Filters</button>
+          : null
+        }
+      </div>
+
+      {/* Results */}
+      <div style={{flex:1,padding:'24px 28px',minWidth:0}}>
+        <div style={{fontFamily:T.font,fontSize:11,color:T.textMuted,marginBottom:14}}>Home › Search Library</div>
+
+        {/* Active Chips */}
+        {activeChips.length>0&&(
+          <div style={{display:'flex',gap:6,flexWrap:'wrap',marginBottom:14}}>
+            {activeChips.map(chip=>(
+              <span key={chip.label} style={{background:'#e6f7f8',color:T.teal,border:`1px solid #b2dfdb`,padding:'4px 10px',borderRadius:12,fontSize:11,fontFamily:T.font,fontWeight:600,display:'flex',alignItems:'center',gap:4}}>
+                {chip.label}
+                <button onClick={chip.remove} style={{background:'none',border:'none',cursor:'pointer',color:T.teal,fontSize:14,lineHeight:1,padding:0}}>×</button>
+              </span>
+            ))}
+          </div>
+        )}
+
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
+          <div style={{fontFamily:T.font,fontSize:14,color:T.textSec}}>
+            <strong style={{color:T.text}}>{filtered.length}</strong> solutions found
+          </div>
+          <div style={{display:'flex',gap:10,alignItems:'center'}}>
+            <div style={{position:'relative'}}>
+              <select value={sortBy} onChange={e=>setSortBy(e.target.value)} style={{height:34,padding:'6px 28px 6px 10px',fontFamily:T.font,fontSize:12,border:`1px solid ${T.border}`,borderRadius:4,background:'white',appearance:'none',cursor:'pointer',outline:'none'}}>
+                {['Relevance','Newest','Oldest','Effectiveness'].map(s=><option key={s}>{s}</option>)}
+              </select>
+              <span style={{position:'absolute',right:8,top:'50%',transform:'translateY(-50%)',pointerEvents:'none',fontSize:10,color:T.textMuted}}>▾</span>
+            </div>
+            {['grid','list'].map(v=>(
+              <button key={v} onClick={()=>setView(v)} style={{width:32,height:32,display:'flex',alignItems:'center',justifyContent:'center',background:view===v?T.teal:'white',border:`1px solid ${view===v?T.teal:T.border}`,borderRadius:4,cursor:'pointer',fontSize:14,color:view===v?'white':T.textMuted}}>
+                {v==='grid'?'⊞':'☰'}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {filtered.length===0 ? (
+          <div style={{textAlign:'center',padding:'64px 24px',color:T.textMuted,fontFamily:T.font}}>
+            <div style={{fontSize:40,marginBottom:12}}>🔍</div>
+            <div style={{fontSize:16,fontWeight:600,marginBottom:6,color:T.text}}>No solutions match your filters</div>
+            <div style={{fontSize:13,marginBottom:20}}>Try removing some filters or broadening your search</div>
+            <Btn variant="secondary" onClick={clearAll}>Clear All Filters</Btn>
+          </div>
+        ) : view==='grid' ? (
+          <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:16}}>
+            {filtered.map(s=><SolCard key={s.id} sol={s} />)}
+          </div>
+        ) : (
+          <div style={{display:'flex',flexDirection:'column',gap:10}}>
+            {filtered.map(s=>(
+              <div key={s.id} onClick={()=>setSelected(s)} style={{background:T.white,borderRadius:8,border:`1px solid ${T.borderLight}`,padding:'16px 20px',cursor:'pointer',display:'flex',gap:16,alignItems:'center',boxShadow:T.s1,transition:'all 180ms'}}
+              onMouseEnter={e=>e.currentTarget.style.boxShadow=T.s2}
+              onMouseLeave={e=>e.currentTarget.style.boxShadow=T.s1}
+              >
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{display:'flex',gap:8,alignItems:'center',flexWrap:'wrap',marginBottom:4}}>
+                    <span style={{fontFamily:T.font,fontSize:14,fontWeight:700,color:T.teal}}>{s.title}</span>
+                    {s.tags.map(t=><StatusBadge key={t} status={t} />)}
+                  </div>
+                  <div style={{fontFamily:T.font,fontSize:12,color:T.textMuted,fontStyle:'italic',marginBottom:6}}>{s.summary}</div>
+                  <div style={{display:'flex',gap:8,alignItems:'center',flexWrap:'wrap'}}>
+                    <SectorTag sector={s.sector} />
+                    <StatusBadge status={s.status} />
+                    {s.rating>0&&<Stars rating={s.rating} count={s.ratingCount} size={12} />}
+                    <span style={{fontFamily:T.font,fontSize:10,color:T.textMuted}}>{s.submitter} · {s.date}</span>
+                  </div>
+                </div>
+                <Btn size="sm" variant="secondary" onClick={e=>{e.stopPropagation();setSelected(s)}}>View →</Btn>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      {selected&&<SolutionModal sol={selected} onClose={()=>setSelected(null)} showToast={showToast} />}
+    </div>
+  );
+};
+
+// need SECTOR_COLORS from components
+Object.assign(window, { SearchResults });
+
+
+
+'use strict';
+const { useState, useEffect, useRef } = React;
+
+// ── ESL REVIEW QUEUE ───────────────────────────────────────────────────────
+const QUEUE = [
+  {id:'ES-247',title:'Modular Deck Edge Barrier System',submitter:'S. Thompson',role:'Rigger',days:3,status:'Submitted',sector:'Rail',fsrCat:'FSR-001',summary:'Quick-clip aluminium barrier modules eliminate the need for traditional timber edge protection on deck pours.',priority:'Normal'},
+  {id:'ES-245',title:'Concrete Pour Proximity Sensors',submitter:'A. Patel',role:'Site Engineer',days:9,status:'Under Review',sector:'Water',fsrCat:'FSR-007',summary:'Ultrasonic sensors create automatic exclusion zones around pump booms during pours.',priority:'Overdue'},
+  {id:'ES-243',title:'Dust Suppression Auto-Mist Ring',submitter:'T. Nguyen',role:'Concrete Finisher',days:5,status:'Submitted',sector:'Energy',fsrCat:'FSR-007',summary:'Auto-activating mist ring on concrete saws suppresses respirable silica dust at source.',priority:'Normal'},
+  {id:'ES-240',title:'Pier Cap Fall Arrest Anchors',submitter:'B. Williams',role:'Ironworker',days:14,status:'Submitted',sector:'Roads',fsrCat:'FSR-001',summary:'Permanent cast-in fall arrest anchor points on all pier caps eliminate temporary rigging each shift.',priority:'Overdue'},
+  {id:'ES-239',title:'Formwork Deflection Sensor Array',submitter:'L. Park',role:'Formwork Carpenter',days:2,status:'Submitted',sector:'Defence',fsrCat:'FSR-006',summary:'IoT displacement sensors on shoring legs provide 30-second early warning before deflection threshold.',priority:'Normal'},
+  {id:'ES-237',title:'Nightworks Proximity Lighting',submitter:'R. Davis',role:'Electrician',days:6,status:'Submitted',sector:'Delivery Partner',fsrCat:'FSR-007',summary:'Programmable LED matrix eliminates shadow zones across 40m deck spans during night concrete pours.',priority:'Normal'},
+];
+
+// ── FEEDBACK MODAL ──────────────────────────────────────────────────────────
+const FeedbackModal = ({ idea, mode, onClose, onSubmit }) => {
+  const [feedback, setFeedback] = React.useState('');
+  if (!idea) return null;
+
+  const isLeadership = mode === 'leadership';
+  const title    = isLeadership ? 'Return with Feedback' : 'Return to Submitter';
+  const subtitle = isLeadership
+    ? 'Your feedback will be sent to the submitter and the Engineered Safety Lead.'
+    : 'Your feedback will be sent back to the submitter so they can revise and resubmit.';
+  const recipients = isLeadership
+    ? ['Submitter','Engineered Safety Lead']
+    : ['Submitter'];
+
+  return (
+    <div style={{position:'fixed',inset:0,zIndex:3000,display:'flex',alignItems:'center',justifyContent:'center'}} onClick={onClose}>
+      <div style={{position:'absolute',inset:0,background:'rgba(0,0,0,.55)'}} />
+      <div onClick={e=>e.stopPropagation()} style={{position:'relative',background:T.white,borderRadius:10,width:'100%',maxWidth:520,boxShadow:T.s3,margin:'0 16px',overflow:'hidden',animation:'slideUp .2s ease'}}>
+
+        {/* Header */}
+        <div style={{padding:'18px 24px',borderBottom:`1px solid ${T.borderLight}`,display:'flex',gap:12,alignItems:'flex-start'}}>
+          <div style={{flex:1}}>
+            <h3 style={{fontFamily:T.font,fontSize:16,fontWeight:700,color:T.text,margin:'0 0 4px'}}>{title}</h3>
+            <div style={{fontFamily:T.font,fontSize:11,color:T.textMuted}}>{idea.id} · {idea.title}</div>
+          </div>
+          <button onClick={onClose} style={{background:'none',border:'none',cursor:'pointer',fontSize:22,color:T.textMuted,padding:'0 4px'}}
+            onMouseEnter={e=>e.currentTarget.style.color=T.red}
+            onMouseLeave={e=>e.currentTarget.style.color=T.textMuted}>×</button>
+        </div>
+
+        {/* Body */}
+        <div style={{padding:'20px 24px'}}>
+          <div style={{background:'#fff8e1',border:`1px solid #ffe082`,borderRadius:6,padding:'10px 14px',marginBottom:18,fontFamily:T.font,fontSize:12,color:'#6d4c00'}}>
+            {subtitle}
+          </div>
+
+          {/* Recipients */}
+          <div style={{marginBottom:16}}>
+            <div style={{fontFamily:T.font,fontSize:11,fontWeight:600,color:T.textMuted,textTransform:'uppercase',letterSpacing:.6,marginBottom:8}}>Will be notified</div>
+            <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+              {recipients.map(r => (
+                <span key={r} style={{background:T.bg,border:`1px solid ${T.border}`,borderRadius:12,padding:'4px 12px',fontFamily:T.font,fontSize:12,color:T.textSec,fontWeight:500}}>{r}</span>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label style={{display:'block',fontFamily:T.font,fontSize:12,fontWeight:600,color:T.textSec,marginBottom:6}}>
+              Feedback / Reason for return <span style={{color:T.red}}>*</span>
+            </label>
+            <textarea
+              value={feedback}
+              onChange={e=>setFeedback(e.target.value)}
+              rows={5}
+              placeholder="Explain what needs to be revised or clarified before this idea can be approved…"
+              style={{width:'100%',padding:'10px 12px',fontFamily:T.font,fontSize:13,color:T.text,border:`1px solid ${T.border}`,borderRadius:4,resize:'vertical',boxSizing:'border-box',outline:'none',lineHeight:1.5}}
+              onFocus={e=>{e.target.style.border=`1px solid ${T.teal}`;e.target.style.boxShadow=`0 0 0 3px rgba(0,167,181,.15)`;}}
+              onBlur={e=>{e.target.style.boxShadow='none';e.target.style.border=`1px solid ${T.border}`;}}
+            />
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div style={{padding:'14px 24px',borderTop:`1px solid ${T.borderLight}`,display:'flex',gap:10,justifyContent:'flex-end',background:T.bg}}>
+          <Btn variant="ghost" size="sm" onClick={onClose}>Cancel</Btn>
+          <Btn variant="danger" size="sm" disabled={!feedback.trim()} onClick={()=>{if(feedback.trim())onSubmit(feedback);}}>
+            Send Feedback & Return
+          </Btn>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const DETAIL_COMMENTS = [
+  {user:'S. Thompson',role:'Submitter',text:'Happy to provide a demonstration on-site. We have a prototype ready for inspection.',date:'26 Apr 2026'},
+  {user:'M. Chen',role:'Safety Rep',text:'This aligns with our edge protection deficiency identified in the March safety audit. Recommend fast-tracking.',date:'27 Apr 2026'},
+];
+
+const IdeaDetailModal = ({idea, onClose, onApprove, onReturn, onClarify, showToast}) => {
+  const [comment, setComment] = useState('');
+  const [comments, setComments] = useState(DETAIL_COMMENTS);
+  const [tab, setTab] = useState('details');
+  if (!idea) return null;
+
+  return (
+    <div style={{position:'fixed',inset:0,zIndex:2000,display:'flex',alignItems:'flex-start',justifyContent:'center',paddingTop:40}} onClick={onClose}>
+      <div style={{position:'absolute',inset:0,background:'rgba(0,0,0,.55)'}} />
+      <div onClick={e=>e.stopPropagation()} style={{position:'relative',background:T.white,borderRadius:10,width:'100%',maxWidth:760,maxHeight:'88vh',display:'flex',flexDirection:'column',boxShadow:T.s3,margin:'0 16px'}}>
+        <div style={{padding:'18px 24px',borderBottom:`1px solid ${T.borderLight}`,display:'flex',gap:12,alignItems:'flex-start',flexShrink:0}}>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:T.font,fontSize:10,color:T.textMuted,marginBottom:4}}>{idea.id} · {idea.fsrCat} · Submitted by {idea.submitter} ({idea.role})</div>
+            <h2 style={{fontFamily:T.font,fontSize:18,fontWeight:700,color:T.text,margin:'0 0 8px'}}>{idea.title}</h2>
+            <div style={{display:'flex',gap:8,alignItems:'center',flexWrap:'wrap'}}>
+              <StatusBadge status={idea.status} />
+              <SectorTag sector={idea.sector} />
+              <DaysPending days={idea.days} />
+              <span style={{fontFamily:T.font,fontSize:11,color:T.textMuted}}>pending review</span>
+            </div>
+          </div>
+          <button onClick={onClose} style={{background:'none',border:'none',cursor:'pointer',fontSize:22,color:T.textMuted,padding:'2px 6px'}}
+          onMouseEnter={e=>e.currentTarget.style.color=T.red} onMouseLeave={e=>e.currentTarget.style.color=T.textMuted}>×</button>
+        </div>
+
+        <div style={{display:'flex',gap:0,borderBottom:`1px solid ${T.borderLight}`,flexShrink:0}}>
+          {['details','timeline','comments'].map(t=>(
+            <button key={t} onClick={()=>setTab(t)} style={{
+              padding:'10px 20px',background:'none',border:'none',borderBottom:`2px solid ${tab===t?T.teal:'transparent'}`,
+              cursor:'pointer',fontFamily:T.font,fontSize:13,fontWeight:tab===t?600:400,
+              color:tab===t?T.teal:T.textMuted,textTransform:'capitalize',
+            }}>{t}</button>
+          ))}
+        </div>
+
+        <div style={{flex:1,overflowY:'auto',padding:'20px 24px'}}>
+          {tab==='details' && (
+            <>
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:20,marginBottom:20}}>
+                <div>
+                  <div style={{fontFamily:T.font,fontSize:10,fontWeight:700,color:T.textMuted,textTransform:'uppercase',letterSpacing:.8,marginBottom:6}}>Problem</div>
+                  <p style={{fontFamily:T.font,fontSize:13,color:T.textSec,lineHeight:1.6,margin:0,background:T.bg,padding:'10px 12px',borderRadius:6}}>
+                    Workers on elevated deck formwork are exposed to unprotected edges during night concrete pours. Traditional timber barriers require 45 min to erect and are frequently damaged by concrete trucks.
+                  </p>
+                </div>
+                <div>
+                  <div style={{fontFamily:T.font,fontSize:10,fontWeight:700,color:T.textMuted,textTransform:'uppercase',letterSpacing:.8,marginBottom:6}}>Proposed Solution</div>
+                  <p style={{fontFamily:T.font,fontSize:13,color:T.textSec,lineHeight:1.6,margin:0,background:T.bg,padding:'10px 12px',borderRadius:6}}>
+                    {idea.summary}
+                  </p>
+                </div>
+              </div>
+              <div style={{background:T.bg,borderRadius:6,height:120,display:'flex',alignItems:'center',justifyContent:'center',marginBottom:20,border:`1px dashed ${T.border}`}}>
+                <div style={{textAlign:'center',color:T.textMuted,fontFamily:'monospace',fontSize:11}}>📷 site photos / drawings (3 files attached)</div>
+              </div>
+              <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8}}>
+                {[{k:'Sector',v:<SectorTag sector={idea.sector} />},{k:'Phase',v:'Construction'},{k:'FSR Category',v:idea.fsrCat},{k:'Risk Level',v:'High'},{k:'Days Pending',v:<DaysPending days={idea.days} />},{k:'Submitter',v:`${idea.submitter} (${idea.role})`}].map(r=>(
+                  <div key={r.k} style={{padding:'10px 12px',background:T.bg,borderRadius:4}}>
+                    <div style={{fontFamily:T.font,fontSize:9,fontWeight:700,color:T.textMuted,textTransform:'uppercase',letterSpacing:.6,marginBottom:3}}>{r.k}</div>
+                    <div style={{fontFamily:T.font,fontSize:12,color:T.text}}>{r.v}</div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+          {tab==='timeline' && (
+            <div style={{display:'flex',flexDirection:'column',gap:0}}>
+              {[
+                {date:'24 Apr 2026',user:'S. Thompson',action:'Submitted idea',icon:'📥',color:T.teal},
+                {date:'24 Apr 2026',user:'System',action:'Auto-routed to ESL Jake Anderson for review',icon:'🔀',color:T.textMuted},
+                {date:'25 Apr 2026',user:'System',action:'Day 1 reminder sent to ESL',icon:'⏰',color:T.textMuted},
+                {date:'29 Apr 2026',user:'Pending',action:'Awaiting ESL review decision',icon:'⏳',color:T.orange},
+              ].map((ev,i)=>(
+                <div key={i} style={{display:'flex',gap:14,paddingBottom:20,position:'relative'}}>
+                  <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:0}}>
+                    <div style={{width:32,height:32,borderRadius:'50%',background:ev.color+'22',border:`2px solid ${ev.color}`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,flexShrink:0}}>{ev.icon}</div>
+                    {i<3&&<div style={{width:2,flex:1,background:T.borderLight,marginTop:4,minHeight:20}} />}
+                  </div>
+                  <div style={{paddingTop:6}}>
+                    <div style={{fontFamily:T.font,fontSize:13,fontWeight:600,color:T.text}}>{ev.action}</div>
+                    <div style={{fontFamily:T.font,fontSize:11,color:T.textMuted,marginTop:2}}>{ev.user} · {ev.date}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          {tab==='comments' && (
+            <>
+              {comments.map((c,i)=>(
+                <div key={i} style={{display:'flex',gap:10,marginBottom:14}}>
+                  <div style={{width:32,height:32,borderRadius:'50%',background:T.teal,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,fontSize:10,fontWeight:700,color:'white',fontFamily:T.font}}>{c.user.split(' ').map(n=>n[0]).join('')}</div>
+                  <div style={{flex:1}}>
+                    <div style={{display:'flex',gap:8,alignItems:'baseline',marginBottom:3}}>
+                      <span style={{fontFamily:T.font,fontSize:12,fontWeight:700,color:T.text}}>{c.user}</span>
+                      <span style={{fontFamily:T.font,fontSize:10,color:T.textMuted}}>{c.role}</span>
+                      <span style={{fontFamily:T.font,fontSize:10,color:T.textMuted,marginLeft:'auto'}}>{c.date}</span>
+                    </div>
+                    <div style={{fontFamily:T.font,fontSize:13,color:T.textSec,lineHeight:1.5,background:T.bg,borderRadius:6,padding:'8px 12px'}}>{c.text}</div>
+                  </div>
+                </div>
+              ))}
+              <div style={{display:'flex',gap:8,marginTop:8}}>
+                <input value={comment} onChange={e=>setComment(e.target.value)} placeholder="Add a comment or clarification request…"
+                  style={{flex:1,height:36,padding:'7px 12px',fontFamily:T.font,fontSize:13,border:`1px solid ${T.border}`,borderRadius:4,outline:'none'}}
+                  onFocus={e=>e.target.style.border=`1px solid ${T.teal}`}
+                  onBlur={e=>e.target.style.border=`1px solid ${T.border}`}
+                  onKeyDown={e=>{if(e.key==='Enter'&&comment.trim()){setComments(p=>[...p,{user:'Jake Anderson',role:'ESL',text:comment,date:'29 Apr 2026'}]);setComment('');}}}
+                />
+                <Btn size="sm" variant="teal" onClick={()=>{if(comment.trim()){setComments(p=>[...p,{user:'Jake Anderson',role:'ESL',text:comment,date:'29 Apr 2026'}]);setComment('');}}}>Post</Btn>
+              </div>
+            </>
+          )}
+        </div>
+
+        <div style={{padding:'14px 24px',borderTop:`1px solid ${T.borderLight}`,display:'flex',gap:10,justifyContent:'space-between',flexShrink:0,background:T.bg}}>
+          <Btn variant="ghost" size="sm" onClick={()=>{onClarify(idea.id);onClose();}}>Request Clarification</Btn>
+          <div style={{display:'flex',gap:10}}>
+            <Btn variant="ghost" size="sm" onClick={()=>{onReturn(idea);onClose();}}>↩ Return with Feedback</Btn>
+            <Btn variant="teal" size="sm" onClick={()=>{onApprove(idea.id);onClose();}}>Approve & Forward to Leadership ✓</Btn>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ESLDashboard = ({ nav, showToast }) => {
+  const [items, setItems] = useState(QUEUE);
+  const [selected, setSelected] = useState(null);
+  const [feedbackTarget, setFeedbackTarget] = useState(null);
+  const [filterStatus, setFilterStatus] = useState('All');
+  const overdue = items.filter(i=>i.days>7);
+
+  const approve = (id) => { setItems(p=>p.filter(i=>i.id!==id)); showToast(`✓ ${id} approved and forwarded to Project Leadership.`,'success'); };
+  const returnWithFeedback = (idea, feedback) => {
+    setItems(p=>p.filter(i=>i.id!==idea.id));
+    setFeedbackTarget(null);
+    showToast(`↩ ${idea.id} returned to ${idea.submitter} with your feedback.`,'warning');
+  };
+  const clarify = (id) => { showToast(`Clarification request sent to submitter of ${id}.`,'info'); };
+
+  const visible = filterStatus==='All' ? items : items.filter(i=>i.status===filterStatus);
+
+  return (
+    <Page title="My Reviews" subtitle="Ideas awaiting your approval — Fremantle Bridges Alliance"
+      breadcrumb="Home › My Reviews"
+      actions={<Btn variant="secondary" size="sm" onClick={()=>showToast('Export ready — check your downloads.','info')}>Export List</Btn>}
+    >
+      {/* Overdue Alert */}
+      {overdue.length>0&&(
+        <div style={{background:'#fce4ec',border:`1px solid ${T.red}`,borderLeft:`4px solid ${T.red}`,borderRadius:6,padding:'12px 16px',marginBottom:20,display:'flex',gap:12,alignItems:'center'}}>
+          <span style={{fontSize:20}}>⚠️</span>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:T.font,fontSize:13,fontWeight:700,color:T.red}}>{overdue.length} item{overdue.length>1?'s are':' is'} overdue (&gt;7 days pending)</div>
+            <div style={{fontFamily:T.font,fontSize:12,color:'#7f0000',marginTop:2}}>Items not reviewed within 14 days will be escalated to Project Leadership.</div>
+          </div>
+          <Btn variant="danger" size="sm" onClick={()=>setFilterStatus('Overdue')}>View Overdue</Btn>
+        </div>
+      )}
+
+      {/* KPI Row */}
+      <div style={{display:'flex',gap:16,marginBottom:24,flexWrap:'wrap'}}>
+        <KPICard label="Pending Reviews" value={items.length} cta="All items" onCta={()=>setFilterStatus('All')} accent={T.teal} />
+        <KPICard label="Overdue (>7 days)" value={overdue.length} cta={overdue.length?'View overdue':undefined} onCta={()=>setFilterStatus('Overdue')} accent={T.red} />
+        <KPICard label="Reviewed This Week" value="5" trend={25} trendLabel="vs last week" accent={T.green} />
+        <KPICard label="Avg Days in Queue" value="5.8d" accent={T.orange} />
+      </div>
+
+      {/* Filter Bar */}
+      <div style={{display:'flex',gap:10,alignItems:'center',marginBottom:16}}>
+        {['All',...new Set(items.map(i=>i.status))].map(s=>(
+          <button key={s} onClick={()=>setFilterStatus(s)} style={{
+            padding:'6px 14px',borderRadius:20,fontFamily:T.font,fontSize:12,fontWeight:600,
+            border:`1px solid ${filterStatus===s?T.teal:T.border}`,
+            background:filterStatus===s?T.teal:'white',
+            color:filterStatus===s?'white':T.textSec,cursor:'pointer',transition:'all 120ms',
+          }}>{s} {s==='All'?`(${items.length})`:s==='Overdue'?`(${overdue.length})`:''}</button>
+        ))}
+        <button style={{marginLeft:'auto',padding:'6px 14px',borderRadius:4,fontFamily:T.font,fontSize:12,fontWeight:500,border:`1px solid ${T.border}`,background:'white',color:T.textSec,cursor:'pointer'}}>
+          Oldest First ▾
+        </button>
+      </div>
+
+      {/* Table */}
+      <Card style={{padding:0,overflow:'hidden'}}>
+        <table style={{width:'100%',borderCollapse:'collapse'}}>
+          <thead>
+            <tr style={{background:T.bg}}>
+              {['','Idea','Submitter','Sector','Status','Days Pending','Actions'].map((h,i)=>(
+                <th key={i} style={{textAlign:'left',padding:'10px 16px',fontSize:10,fontWeight:700,color:T.textMuted,fontFamily:T.font,textTransform:'uppercase',letterSpacing:.6,borderBottom:`2px solid ${T.borderLight}`,whiteSpace:'nowrap'}}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {visible.map((row,i) => (
+              <tr key={row.id}
+                style={{borderTop:`1px solid ${T.borderLight}`,cursor:'pointer',transition:'background 100ms',background:row.days>7?'#fff5f5':'white'}}
+                onMouseEnter={e=>e.currentTarget.style.background=row.days>7?'#ffe8e8':'#f8f9fa'}
+                onMouseLeave={e=>e.currentTarget.style.background=row.days>7?'#fff5f5':'white'}
+              >
+                <td style={{padding:'12px 16px',width:8}}>
+                  <input type="checkbox" style={{width:15,height:15,accentColor:T.teal,cursor:'pointer'}} />
+                </td>
+                <td style={{padding:'12px 16px'}} onClick={()=>setSelected(row)}>
+                  <div style={{fontFamily:T.font,fontSize:13,fontWeight:600,color:T.teal,marginBottom:2}}>{row.title}</div>
+                  <div style={{fontFamily:T.font,fontSize:11,color:T.textMuted}}>{row.id} · {row.fsrCat}</div>
+                </td>
+                <td style={{padding:'12px 16px'}}>
+                  <div style={{fontFamily:T.font,fontSize:12,color:T.text}}>{row.submitter}</div>
+                  <div style={{fontFamily:T.font,fontSize:10,color:T.textMuted}}>{row.role}</div>
+                </td>
+                <td style={{padding:'12px 16px'}}><SectorTag sector={row.sector} /></td>
+                <td style={{padding:'12px 16px'}}><StatusBadge status={row.status} /></td>
+                <td style={{padding:'12px 16px'}}><DaysPending days={row.days} /></td>
+                <td style={{padding:'12px 16px'}}>
+                  <div style={{display:'flex',gap:6}}>
+                    <button onClick={()=>setSelected(row)} style={{background:'none',border:`1px solid ${T.border}`,borderRadius:4,padding:'5px 10px',fontFamily:T.font,fontSize:11,fontWeight:600,color:T.textSec,cursor:'pointer'}}
+                    onMouseEnter={e=>{e.currentTarget.style.borderColor=T.teal;e.currentTarget.style.color=T.teal}}
+                    onMouseLeave={e=>{e.currentTarget.style.borderColor=T.border;e.currentTarget.style.color=T.textSec}}
+                    >Review</button>
+                    <button onClick={()=>approve(row.id)} style={{background:'none',border:`1px solid ${T.green}`,borderRadius:4,padding:'5px 10px',fontFamily:T.font,fontSize:11,fontWeight:600,color:T.green,cursor:'pointer'}}
+                    onMouseEnter={e=>{e.currentTarget.style.background=T.green;e.currentTarget.style.color='white'}}
+                    onMouseLeave={e=>{e.currentTarget.style.background='none';e.currentTarget.style.color=T.green}}
+                    >✓</button>
+                    <button onClick={()=>setFeedbackTarget(row)} style={{background:'none',border:`1px solid ${T.border}`,borderRadius:4,padding:'5px 10px',fontFamily:T.font,fontSize:11,fontWeight:600,color:T.textMuted,cursor:'pointer'}}
+                    onMouseEnter={e=>{e.currentTarget.style.borderColor=T.red;e.currentTarget.style.color=T.red}}
+                    onMouseLeave={e=>{e.currentTarget.style.borderColor=T.border;e.currentTarget.style.color=T.textMuted}}
+                    >↩</button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {visible.length===0&&(
+          <div style={{textAlign:'center',padding:'48px',fontFamily:T.font}}>
+            <div style={{fontSize:32,marginBottom:10}}>✅</div>
+            <div style={{fontSize:15,fontWeight:600,color:T.text,marginBottom:6}}>No ideas pending your review</div>
+            <div style={{fontSize:13,color:T.textMuted}}>Great work! Check back tomorrow.</div>
+          </div>
+        )}
+      </Card>
+      {selected&&<IdeaDetailModal idea={selected} onClose={()=>setSelected(null)} onApprove={approve} onReturn={(idea)=>{setSelected(null);setFeedbackTarget(idea);}} onClarify={clarify} showToast={showToast} />}
+      {feedbackTarget&&<FeedbackModal idea={feedbackTarget} mode="esl" onClose={()=>setFeedbackTarget(null)} onSubmit={(fb)=>returnWithFeedback(feedbackTarget,fb)} />}
+    </Page>
+  );
+};
+
+// ── LEADERSHIP DASHBOARD ────────────────────────────────────────────────────
+const TrendChart = () => {
+  const ref = useRef(null);
+  useEffect(()=>{
+    if(!ref.current||typeof Chart==='undefined') return;
+    const months = ['Nov','Dec','Jan','Feb','Mar','Apr'];
+    const chart = new Chart(ref.current.getContext('2d'),{
+      type:'line',
+      data:{
+        labels:months,
+        datasets:[
+          {label:'Submitted',data:[18,22,31,29,38,45],borderColor:'#1a56db',backgroundColor:'rgba(26,86,219,.08)',tension:.35,fill:true,pointRadius:4,pointBackgroundColor:'#1a56db'},
+          {label:'Approved',data:[10,14,18,20,25,30],borderColor:T.green,backgroundColor:'rgba(100,167,11,.08)',tension:.35,fill:true,pointRadius:4,pointBackgroundColor:T.green},
+        ]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{position:'top',labels:{font:{family:'Century Gothic, Arial',size:11},boxWidth:12}}},
+        scales:{
+          x:{grid:{color:'#f0f0f0'},ticks:{font:{family:'Century Gothic, Arial',size:10},color:'#999'}},
+          y:{grid:{color:'#f0f0f0'},ticks:{font:{family:'Century Gothic, Arial',size:10},color:'#999'},beginAtZero:true},
+        },
+      }
+    });
+    return ()=>chart.destroy();
+  },[]);
+  return <div style={{height:200}}><canvas ref={ref} /></div>;
+};
+
+const ImplDonut = () => {
+  const ref = useRef(null);
+  useEffect(()=>{
+    if(!ref.current||typeof Chart==='undefined') return;
+    const chart = new Chart(ref.current.getContext('2d'),{
+      type:'doughnut',
+      data:{
+        labels:['Approved','Under Review','Submitted','Rejected','Closed'],
+        datasets:[{data:[98,32,45,18,54],backgroundColor:['#64a70b','#c75000','#1a56db','#e30613','#999'],borderWidth:0,hoverOffset:6}]
+      },
+      options:{cutout:'68%',responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{family:'Century Gothic, Arial',size:11},padding:12,boxWidth:12}}}}
+    });
+    return ()=>chart.destroy();
+  },[]);
+  return <div style={{height:200}}><canvas ref={ref} /></div>;
+};
+
+const ESCALATED = [
+  {id:'ES-240',title:'Pier Cap Fall Arrest Anchors',days:14,assignee:'ESL Jake Anderson',sector:'Roads'},
+  {id:'ES-229',title:'Traffic Management Barrier Gates',days:18,assignee:'ESL K. McDonald',sector:'Water'},
+];
+
+const IMPL_ACTIONS = [
+  {id:'ACT-012',idea:'Rebar Cage Safety Netting',assignee:'J. Walsh',due:'30 May 2026',status:'In Progress',progress:60,dueColor:T.green},
+  {id:'ACT-011',idea:'PPE QR-Code Tracking',assignee:'M. Chen',due:'15 May 2026',status:'Pending Approval',progress:80,dueColor:T.orange},
+  {id:'ACT-010',idea:'Modular Deck Edge Barriers',assignee:'S. Thompson',due:'10 May 2026',status:'In Progress',progress:45,dueColor:T.orange},
+  {id:'ACT-009',idea:'Night Works Lighting Matrix',assignee:'R. Davis',due:'1 May 2026',status:'Not Started',progress:0,dueColor:T.red},
+];
+
+// Ideas forwarded by ESL awaiting Leadership final approval
+const PENDING_LEADERSHIP = [
+  {id:'ES-241',title:'Automated Rebar Cage Netting System',submitter:'M. Chen',role:'Site Engineer',days:2,sector:'Rail',fsrCat:'FSR-001',summary:'Pre-tensioned netting system deploys automatically around rebar cages, eliminating manual edge protection during cage assembly.'},
+  {id:'ES-238',title:'Smart PPE Compliance Scanner',submitter:'J. Walsh',role:'Safety Officer',days:4,sector:'Roads',fsrCat:'FSR-003',summary:'AI-powered camera at site entry scans PPE compliance and denies access to non-compliant workers in real time.'},
+  {id:'ES-235',title:'Concrete Pump Exclusion Zone Beacons',submitter:'A. Patel',role:'Site Engineer',days:1,sector:'Energy',fsrCat:'FSR-007',summary:'Wireless beacons on pump booms broadcast live exclusion zone radii to wearable crew alerts.'},
+];
+
+const LeadershipDashboard = ({ nav, showToast }) => {
+  const [pendingItems, setPendingItems] = useState(PENDING_LEADERSHIP);
+  const [feedbackTarget, setFeedbackTarget] = useState(null);
+
+  const approveImpl = (id) => {
+    setPendingItems(p=>p.filter(i=>i.id!==id));
+    showToast(`✓ ${id} approved for implementation. Project team notified.`,'success');
+  };
+  const returnWithFeedback = (idea, feedback) => {
+    setPendingItems(p=>p.filter(i=>i.id!==idea.id));
+    setFeedbackTarget(null);
+    showToast(`↩ ${idea.id} returned to submitter and ESL with your feedback.`,'warning');
+  };
+
+  return (
+    <Page title="Reports & Approvals" subtitle="Monthly summary · Fremantle Bridges Alliance · April 2026"
+      breadcrumb="Home › Reports & Approvals"
+      actions={
+        <div style={{display:'flex',gap:8}}>
+          <Btn variant="secondary" size="sm" onClick={()=>showToast('Generating PDF report… Check your downloads.','info')}>Export Monthly Report</Btn>
+        </div>
+      }
+    >
+      {/* ── PENDING FINAL APPROVAL ── */}
+      {pendingItems.length > 0 && (
+        <div style={{marginBottom:28}}>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
+            <div>
+              <h2 style={{fontFamily:T.font,fontSize:16,fontWeight:700,color:T.text,margin:'0 0 2px'}}>Pending Your Approval</h2>
+              <p style={{fontFamily:T.font,fontSize:12,color:T.textMuted,margin:0}}>Ideas approved by ESL — awaiting your final decision before implementation</p>
+            </div>
+            <span style={{background:'#f3e8ff',color:'#7c3aed',padding:'3px 12px',borderRadius:12,fontSize:12,fontWeight:700,fontFamily:T.font}}>{pendingItems.length} awaiting</span>
+          </div>
+          <Card style={{padding:0,overflow:'hidden',border:`1px solid #e9d5ff`}}>
+            {pendingItems.map((item, i) => (
+              <div key={item.id} style={{
+                padding:'16px 20px',
+                borderTop: i > 0 ? `1px solid ${T.borderLight}` : 'none',
+                display:'flex',gap:16,alignItems:'flex-start',
+              }}>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{display:'flex',gap:10,alignItems:'center',marginBottom:5,flexWrap:'wrap'}}>
+                    <span style={{fontFamily:T.font,fontSize:11,fontWeight:700,color:'#7c3aed'}}>{item.id}</span>
+                    <SectorTag sector={item.sector} />
+                    <span style={{fontFamily:T.font,fontSize:10,color:T.textMuted}}>{item.fsrCat}</span>
+                    <StatusBadge status="Pending Decision" />
+                    <DaysPending days={item.days} />
+                    <span style={{fontFamily:T.font,fontSize:10,color:T.textMuted}}>since ESL approval</span>
+                  </div>
+                  <div style={{fontFamily:T.font,fontSize:14,fontWeight:600,color:T.text,marginBottom:3}}>{item.title}</div>
+                  <div style={{fontFamily:T.font,fontSize:12,color:T.textSec,lineHeight:1.5}}>{item.summary}</div>
+                  <div style={{fontFamily:T.font,fontSize:11,color:T.textMuted,marginTop:4}}>Submitted by {item.submitter} ({item.role})</div>
+                </div>
+                <div style={{display:'flex',flexDirection:'column',gap:8,flexShrink:0}}>
+                  <Btn variant="teal" size="sm" onClick={()=>approveImpl(item.id)}>Approve for Implementation ✓</Btn>
+                  <Btn variant="ghost" size="sm" onClick={()=>setFeedbackTarget(item)}>↩ Return with Feedback</Btn>
+                </div>
+              </div>
+            ))}
+          </Card>
+        </div>
+      )}
+      {/* KPI Cards — no scroll required */}
+      <div style={{display:'flex',gap:16,marginBottom:24,flexWrap:'wrap'}}>
+        <KPICard label="Total Submitted" value="247" trend={12} trendLabel="vs last month" cta="View All" onCta={()=>nav('search')} accent={T.teal} />
+        <KPICard label="Pending Approval" value="8" cta="Review Now" onCta={()=>nav('esl')} accent={T.orange} />
+        <KPICard label="Approved This Month" value="12" trend={8} trendLabel="vs last month" accent={T.green} />
+        <KPICard label="Avg Implementation" value="45d" trend={-6} trendLabel="days vs target" accent={T.red} />
+      </div>
+
+      {/* Charts Row */}
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:24}}>
+        <Card>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
+            <h3 style={{fontFamily:T.font,fontSize:14,fontWeight:700,color:T.text,margin:0}}>Submission Trend (6 months)</h3>
+            <span style={{fontFamily:T.font,fontSize:10,color:T.textMuted}}>Nov 2025 – Apr 2026</span>
+          </div>
+          <TrendChart />
+        </Card>
+        <Card>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
+            <h3 style={{fontFamily:T.font,fontSize:14,fontWeight:700,color:T.text,margin:0}}>Ideas by Status</h3>
+            <span style={{fontFamily:T.font,fontSize:10,color:T.textMuted}}>247 total</span>
+          </div>
+          <ImplDonut />
+        </Card>
+      </div>
+
+      {/* Escalated Alerts + Impl Actions */}
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:24}}>
+        <Card>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
+            <h3 style={{fontFamily:T.font,fontSize:14,fontWeight:700,color:T.text,margin:0}}>🚨 Escalated Items</h3>
+            <StatusBadge status="Submitted" />
+          </div>
+          {ESCALATED.length>0 ? (
+            <div style={{background:'#fce4ec',border:`1px solid ${T.red}`,borderRadius:6,padding:'10px 14px',marginBottom:12,fontFamily:T.font,fontSize:12,color:'#7f0000'}}>
+              ⚠ {ESCALATED.length} items have been pending review for over 14 days. Immediate action required.
+            </div>
+          ) : (
+            <div style={{fontFamily:T.font,fontSize:13,color:T.green}}>✓ No escalated items</div>
+          )}
+          {ESCALATED.map(e=>(
+            <div key={e.id} style={{borderTop:`1px solid ${T.borderLight}`,padding:'10px 0',display:'flex',gap:12,alignItems:'center'}}>
+              <div style={{flex:1}}>
+                <div style={{fontFamily:T.font,fontSize:13,fontWeight:600,color:T.text}}>{e.title}</div>
+                <div style={{fontFamily:T.font,fontSize:11,color:T.textMuted,marginTop:2}}>{e.id} · {e.assignee}</div>
+              </div>
+              <DaysPending days={e.days} />
+            </div>
+          ))}
+          <div style={{paddingTop:12}}>
+            <button onClick={()=>nav('esl')} style={{background:'none',border:'none',cursor:'pointer',color:T.teal,fontFamily:T.font,fontSize:12,fontWeight:600}}>View all escalated items →</button>
+          </div>
+        </Card>
+
+        {/* Top 5 Sectors */}
+        <Card>
+          <h3 style={{fontFamily:T.font,fontSize:14,fontWeight:700,color:T.text,margin:'0 0 14px'}}>Ideas by Sector</h3>
+          {[{sector:'Rail',n:89,pct:36},{sector:'Roads',n:62,pct:25},{sector:'Defence',n:42,pct:17},{sector:'Water',n:36,pct:15},{sector:'Energy',n:18,pct:7}].map(r=>(
+            <div key={r.sector} style={{marginBottom:12}}>
+              <div style={{display:'flex',justifyContent:'space-between',marginBottom:4}}>
+                <div style={{display:'flex',gap:8,alignItems:'center'}}>
+                  <SectorTag sector={r.sector} />
+                  <span style={{fontFamily:T.font,fontSize:12,color:T.textSec}}>{r.n} ideas</span>
+                </div>
+                <span style={{fontFamily:T.font,fontSize:11,color:T.textMuted,fontWeight:600}}>{r.pct}%</span>
+              </div>
+              <div style={{height:5,background:T.borderLight,borderRadius:3,overflow:'hidden'}}>
+                <div style={{height:'100%',width:`${r.pct}%`,background:SECTOR_COLORS[r.sector]||T.teal,borderRadius:3,transition:'width 600ms ease'}} />
+              </div>
+            </div>
+          ))}
+        </Card>
+      </div>
+
+      {/* Implementation Actions Table */}
+      <Card style={{padding:0,overflow:'hidden'}}>
+        <div style={{padding:'16px 24px',borderBottom:`1px solid ${T.borderLight}`,display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+          <h3 style={{fontFamily:T.font,fontSize:14,fontWeight:700,color:T.text,margin:0}}>Implementation Actions</h3>
+          <button onClick={()=>nav('esl')} style={{background:'none',border:'none',cursor:'pointer',color:T.teal,fontFamily:T.font,fontSize:12,fontWeight:600}}>View All →</button>
+        </div>
+        <table style={{width:'100%',borderCollapse:'collapse'}}>
+          <thead>
+            <tr style={{background:T.bg}}>
+              {['Action','Assigned To','Due Date','Status','Progress'].map(h=>(
+                <th key={h} style={{textAlign:'left',padding:'9px 16px',fontSize:10,fontWeight:700,color:T.textMuted,fontFamily:T.font,textTransform:'uppercase',letterSpacing:.5,borderBottom:`1px solid ${T.borderLight}`}}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {IMPL_ACTIONS.map((a,i)=>(
+              <tr key={a.id} style={{borderTop:`1px solid ${T.borderLight}`,transition:'background 100ms'}}
+              onMouseEnter={e=>e.currentTarget.style.background='#f8f9fa'}
+              onMouseLeave={e=>e.currentTarget.style.background='white'}
+              >
+                <td style={{padding:'12px 16px'}}>
+                  <div style={{fontFamily:T.font,fontSize:13,fontWeight:600,color:T.text}}>{a.idea}</div>
+                  <div style={{fontFamily:T.font,fontSize:10,color:T.textMuted}}>{a.id}</div>
+                </td>
+                <td style={{padding:'12px 16px',fontFamily:T.font,fontSize:12,color:T.textSec}}>{a.assignee}</td>
+                <td style={{padding:'12px 16px'}}>
+                  <span style={{fontFamily:T.font,fontSize:12,fontWeight:600,color:a.dueColor}}>{a.due}</span>
+                </td>
+                <td style={{padding:'12px 16px'}}><StatusBadge status={a.status} /></td>
+                <td style={{padding:'12px 16px',width:140}}>
+                  <div style={{display:'flex',alignItems:'center',gap:8}}>
+                    <div style={{flex:1,height:5,background:T.borderLight,borderRadius:3,overflow:'hidden'}}>
+                      <div style={{height:'100%',width:`${a.progress}%`,background:a.progress>=80?T.green:a.progress>=40?T.teal:T.orange,borderRadius:3}} />
+                    </div>
+                    <span style={{fontFamily:T.font,fontSize:10,color:T.textMuted,flexShrink:0,width:28,textAlign:'right'}}>{a.progress}%</span>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Card>
+
+      {/* Footer */}
+      <div style={{marginTop:40,paddingTop:20,borderTop:`1px solid ${T.borderLight}`,display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+        <div style={{display:'flex',alignItems:'center',gap:8}}>
+          <div style={{background:T.red,width:22,height:22,borderRadius:2,display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <span style={{color:'white',fontWeight:700,fontSize:7,fontFamily:T.font}}>LOR</span>
+          </div>
+          <div style={{fontFamily:T.font,fontSize:9,fontWeight:700,color:T.text,letterSpacing:1.2,textTransform:'uppercase'}}>The Power of Experience</div>
+        </div>
+        <div style={{fontFamily:T.font,fontSize:10,color:T.textMuted}}>Laing O'Rourke · FBA · Report generated 29 Apr 2026</div>
+      </div>
+
+      {feedbackTarget&&<FeedbackModal idea={feedbackTarget} mode="leadership" onClose={()=>setFeedbackTarget(null)} onSubmit={(fb)=>returnWithFeedback(feedbackTarget,fb)} />}
+    </Page>
+  );
+};
+
+Object.assign(window, { ESLDashboard, LeadershipDashboard });
+
+
+'use strict';
+const { useState } = React;
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accentColor": "#00a7b5",
+  "primaryCTA": "#e30613",
+  "density": "comfortable",
+  "showHero": true
+}/*EDITMODE-END*/;
+
+// ── ROLE DEFINITIONS ────────────────────────────────────────────────────────
+const ROLES = [
+  { id:'team',       label:'Project Team Member',       desc:'Submit and track your safety ideas',            defaultView:'submit'     },
+  { id:'esl',        label:'Engineered Safety Lead',    desc:'Review and action ideas from your team',        defaultView:'esl'        },
+  { id:'leadership', label:'Project Leadership',        desc:'Final approvals and implementation oversight',  defaultView:'leadership'  },
+];
+
+const NAV_BY_ROLE = {
+  team:       [{id:'dashboard',label:'Home'},{id:'submit',label:'Submit Idea'},{id:'search',label:'Search Library'}],
+  esl:        [{id:'dashboard',label:'Home'},{id:'esl',label:'My Reviews'},{id:'search',label:'Search Library'}],
+  leadership: [{id:'dashboard',label:'Home'},{id:'leadership',label:'Reports & Approvals'},{id:'search',label:'Search Library'}],
+};
+
+const STEP_BY_ROLE = { team:1, esl:2, leadership:3 };
+
+// ── ROLE PICKER ─────────────────────────────────────────────────────────────
+const RolePicker = ({ onSelect }) => {
+  const [selected, setSelected] = useState('');
+  const role = ROLES.find(r => r.id === selected);
+
+  return (
+    <div style={{minHeight:'100vh',background:T.bg,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:32}}>
+      <div style={{maxWidth:480,width:'100%'}}>
+
+        {/* Branding */}
+        <div style={{textAlign:'center',marginBottom:36}}>
+          <div style={{display:'inline-flex',alignItems:'center',gap:12,marginBottom:20}}>
+            <div style={{background:T.red,width:52,height:52,borderRadius:5,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+              <span style={{color:'white',fontWeight:700,fontSize:14,fontFamily:T.font,letterSpacing:1}}>LOR</span>
+            </div>
+            <div style={{textAlign:'left'}}>
+              <div style={{fontWeight:700,fontSize:19,color:T.text,fontFamily:T.font,lineHeight:1.2}}>Engineered Safety</div>
+              <div style={{fontSize:11,color:T.textMuted,fontFamily:T.font,letterSpacing:.3}}>Platform · Fremantle Bridges Alliance</div>
+            </div>
+          </div>
+          <h2 style={{fontFamily:T.font,fontSize:24,fontWeight:700,color:T.text,margin:'0 0 6px'}}>Welcome back</h2>
+          <p style={{fontFamily:T.font,fontSize:13.5,color:T.textMuted,margin:0}}>Select your role to continue to the platform</p>
+        </div>
+
+        {/* Card */}
+        <div style={{background:T.white,borderRadius:10,padding:32,boxShadow:T.s2}}>
+
+          <div style={{marginBottom:role ? 16 : 28}}>
+            <label style={{display:'block',fontFamily:T.font,fontSize:12,fontWeight:600,color:T.textSec,marginBottom:7,letterSpacing:.2}}>
+              I am a… <span style={{color:T.red}}>*</span>
+            </label>
+            <div style={{position:'relative'}}>
+              <select
+                value={selected}
+                onChange={e => setSelected(e.target.value)}
+                style={{
+                  width:'100%',height:46,padding:'10px 38px 10px 14px',
+                  fontFamily:T.font,fontSize:14,color:selected ? T.text : T.textMuted,
+                  border:`1px solid ${T.border}`,borderRadius:6,background:'white',
+                  appearance:'none',boxSizing:'border-box',outline:'none',cursor:'pointer',
+                }}
+                onFocus={e  => { e.target.style.border=`1px solid ${T.teal}`; e.target.style.boxShadow=`0 0 0 3px rgba(0,167,181,.15)`; }}
+                onBlur={e   => { e.target.style.boxShadow='none'; e.target.style.border=`1px solid ${T.border}`; }}
+              >
+                <option value="">Select your role…</option>
+                {ROLES.map(r => <option key={r.id} value={r.id}>{r.label}</option>)}
+              </select>
+              <span style={{position:'absolute',right:14,top:'50%',transform:'translateY(-50%)',pointerEvents:'none',color:T.textMuted,fontSize:12}}>▾</span>
+            </div>
+          </div>
+
+          {/* Role description hint */}
+          {role && (
+            <div style={{
+              background:'#e6f7f8',border:`1px solid #b2dfdb`,borderRadius:6,
+              padding:'11px 14px',marginBottom:24,
+              display:'flex',gap:10,alignItems:'center',animation:'slideUp .2s ease',
+            }}>
+              <div style={{width:36,height:36,borderRadius:'50%',background:T.teal,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                <span style={{color:'white',fontWeight:700,fontSize:12,fontFamily:T.font}}>
+                  {role.label.split(' ').map(w=>w[0]).join('').slice(0,2)}
+                </span>
+              </div>
+              <div>
+                <div style={{fontFamily:T.font,fontSize:13,fontWeight:600,color:T.teal,marginBottom:2}}>{role.label}</div>
+                <div style={{fontFamily:T.font,fontSize:11.5,color:T.textSec}}>{role.desc}</div>
+              </div>
+            </div>
+          )}
+
+          <button
+            disabled={!selected}
+            onClick={() => onSelect(selected)}
+            style={{
+              width:'100%',height:46,background:selected ? T.red : '#d4d4d4',color:'white',border:'none',
+              borderRadius:6,fontFamily:T.font,fontSize:14,fontWeight:700,
+              cursor:selected ? 'pointer' : 'not-allowed',transition:'background 150ms',letterSpacing:.2,
+            }}
+            onMouseEnter={e => selected && (e.currentTarget.style.background = T.redHover)}
+            onMouseLeave={e => (e.currentTarget.style.background = selected ? T.red : '#d4d4d4')}
+          >
+            Enter Platform →
+          </button>
+
+          <div style={{marginTop:20,paddingTop:16,borderTop:`1px solid ${T.borderLight}`,fontFamily:T.font,fontSize:11,color:T.textMuted,textAlign:'center'}}>
+            Fremantle Bridges Alliance · Perth WA · April 2026
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── WORKFLOW BANNER ─────────────────────────────────────────────────────────
+
+
+// ── APP ROOT ────────────────────────────────────────────────────────────────
+const App = () => {
+  const [role, setRole]   = useState(null);
+  const [view, setView]   = useState('dashboard');
+  const [toasts, setToasts] = useState([]);
+
+  const showToast = (message, type='success') => {
+    const id = Date.now();
+    setToasts(p => [...p, { id, message, type }]);
+  };
+  const dismissToast = id => setToasts(p => p.filter(t => t.id !== id));
+
+  const nav = v => {
+    setView(v);
+    window.scrollTo({ top:0, behavior:'smooth' });
+  };
+
+  const handleRoleSelect = r => {
+    setRole(r);
+    setView(ROLES.find(x => x.id === r)?.defaultView || 'dashboard');
+  };
+
+  if (!role) return <RolePicker onSelect={handleRoleSelect} />;
+
+  const roleNav   = NAV_BY_ROLE[role] || NAV_BY_ROLE.team;
+  const roleStep  = STEP_BY_ROLE[role] || 1;
+  const roleLabel = ROLES.find(r2 => r2.id === role)?.label || '';
+
+  return (
+    <div style={{ fontFamily:T.font, minHeight:'100vh', background:T.bg }}>
+      <Header view={view} nav={nav} notifCount={3} roleNav={roleNav} roleLabel={roleLabel} onSwitchRole={() => setRole(null)} />
+
+      {view === 'dashboard'  && <Dashboard    nav={nav} showToast={showToast} role={role} />}
+      {view === 'submit'     && <SubmitForm   nav={nav} showToast={showToast} />}
+      {view === 'search'     && <SearchResults nav={nav} showToast={showToast} />}
+      {view === 'esl'        && <ESLDashboard nav={nav} showToast={showToast} />}
+      {view === 'leadership' && <LeadershipDashboard nav={nav} showToast={showToast} />}
+
+      {toasts.map(t => (
+        <Toast key={t.id} message={t.message} type={t.type} onDismiss={() => dismissToast(t.id)} />
+      ))}
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+
+
+  </script>
+</body>
+</html>
