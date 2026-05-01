@@ -148,6 +148,27 @@
   </script>
 
   <script type="text/babel">
+    // Simple loading hide - remove loading screen when root has content
+    window.appReady = function() {
+      var loading = document.getElementById('loading');
+      if (loading) {
+        loading.style.display = 'none';
+      }
+    };
+
+    // Hide loading on any error
+    window.addEventListener('error', function(e) {
+      var loading = document.getElementById('loading');
+      if (loading) {
+        loading.innerHTML = '<div style="padding:40px;text-align:center;"><h1 style="color:#e30613">Error Loading</h1><p>' + e.message + '</p></div>';
+      }
+      console.error('Error:', e);
+    });
+
+    // Delay script execution slightly to ensure React is loaded
+    setTimeout(function() {
+      try {
+        >
     // Global error handler for React
     window.addEventListener('error', (event) => {
       console.error('JavaScript Error:', event.error);
@@ -2053,6 +2074,16 @@ const App = () => {
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 
 
-  </script>
+  
+        window.appReady();
+      } catch (e) {
+        console.error('App Error:', e);
+        var loading = document.getElementById('loading');
+        if (loading) {
+          loading.innerHTML = '<div style="padding:40px;text-align:center;"><h1 style="color:#e30613">Application Error</h1><p>' + e.message + '</p><small>' + e.stack + '</small></div>';
+        }
+      }
+    }, 500);
+  </script></script>
 </body>
 </html>
