@@ -148,6 +148,7 @@
   </script>
 
   <script type="text/babel">
+>
     // Simple loading hide - remove loading screen when root has content
     window.appReady = function() {
       var loading = document.getElementById('loading');
@@ -409,7 +410,6 @@ Object.assign(window, {T,LORLogo,Header,Btn,StatusBadge,SectorTag,KPICard,Toast,
 
 
 'use strict';
-const { useState, useEffect, useRef } = React;
 
 const RECENT = [
   {id:'ES-247',title:'Modular Deck Edge Barrier System',submitter:'S. Thompson',date:'29 Apr 2026',status:'Submitted',sector:'Rail'},
@@ -606,7 +606,6 @@ Object.assign(window, { Dashboard });
 
 
 'use strict';
-const { useState, useEffect } = React;
 
 const STEPS = ['Project & Context','Problem & Solution','Links & Attachments','Review & Submit'];
 
@@ -987,7 +986,6 @@ Object.assign(window, { SubmitForm });
 
 
 'use strict';
-const { useState, useMemo } = React;
 
 const SOLUTIONS = [
   {id:'ES-246',title:'Rebar Cage Safety Netting',summary:'Tensioned polyethylene netting beneath rebar cages eliminates dropped-object risk during vertical pour operations.',sector:'Rail',status:'Approved',phase:'Construction',rating:4.7,ratingCount:31,submitter:'M. Chen',date:'28 Apr 2026',fsrCat:'FSR-002',tags:['LOR Preferred'],description:'Workers on the FBA project identified a dropped-object hazard during rebar cage assembly over live traffic corridors. This solution involves installing tensioned HDPE netting systems below all vertical rebar cages during assembly. The netting is rated to 250kg and can be deployed in under 15 minutes by two workers. Zero dropped-object incidents recorded since implementation.',evidence:'Deployed on Pier 3, Pier 4, and Pier 5 deck works. Photo documentation available.'},
@@ -1303,7 +1301,6 @@ Object.assign(window, { SearchResults });
 
 
 'use strict';
-const { useState, useEffect, useRef } = React;
 
 // ── ESL REVIEW QUEUE ───────────────────────────────────────────────────────
 const QUEUE = [
@@ -1906,7 +1903,6 @@ Object.assign(window, { ESLDashboard, LeadershipDashboard });
 
 
 'use strict';
-const { useState } = React;
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "accentColor": "#00a7b5",
@@ -2084,6 +2080,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);
         }
       }
     }, 500);
-  </script></script>
+  
+</script></script></script>
 </body>
 </html>
