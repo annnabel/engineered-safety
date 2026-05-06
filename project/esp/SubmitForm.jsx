@@ -93,6 +93,14 @@ const Step1 = ({data,setData,errors}) => (
         <Field label="Project Name" required helper="auto-populated, editable">
           <Select value={data.project} onChange={e=>setData({...data,project:e.target.value})} options={[
             {value:'FBA',label:'Fremantle Bridges Alliance'},
+            {value:'BRE',label:'Byford Rail Extension'},
+            {value:'EFB',label:'Eastern Freeway Burke to Tram Alliance'},
+            {value:'QRSA',label:"Queensland Rail's Station Accessibility Upgrade Program"},
+            {value:'MEL',label:'Morley-Ellenbrook Line'},
+            {value:'SEPA',label:'South Eastern Program Alliance'},
+            {value:'SRL',label:'Suburban Rail Loop'},
+            {value:'BIR',label:'Bridge Inn Road'},
+            {value:'MAR',label:'Melbourne Airport Rail - Early Works'},
             {value:'other',label:'Other Project'},
           ]} />
         </Field>
@@ -143,7 +151,7 @@ const Step2 = ({data,setData,errors}) => (
     </Field>
     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
       <Field label="Expected Health Benefit" required error={errors.benefit}>
-        <Select value={data.benefit} onChange={e=>setData({...data,benefit:e.target.value})} error={errors.benefit} options={[
+        <Select value={data.benefit} onChange={e=>setData({...data,benefit:e.target.value, benefitOther: e.target.value==='Other' ? (data.benefitOther||'') : ''})} error={errors.benefit} options={[
           {value:'',label:'Select benefit…'},
           {value:'Eliminate hazard',label:'Eliminate hazard'},
           {value:'Reduce fall risk',label:'Reduce fall risk'},
@@ -153,6 +161,23 @@ const Step2 = ({data,setData,errors}) => (
           {value:'Reduce dust/noise exposure',label:'Reduce dust/noise exposure'},
           {value:'Other',label:'Other'},
         ]} />
+        {data.benefit==='Other' && (
+          <input
+            type="text"
+            value={data.benefitOther||''}
+            onChange={e=>setData({...data,benefitOther:e.target.value})}
+            placeholder="Please specify the health benefit…"
+            autoFocus
+            style={{
+              marginTop:8,width:'100%',height:40,padding:'8px 12px',
+              fontFamily:T.font,fontSize:13,color:T.text,
+              border:`1px solid ${T.border}`,borderRadius:4,background:'white',
+              outline:'none',boxSizing:'border-box',animation:'slideUp .15s ease',
+            }}
+            onFocus={e=>{e.target.style.border=`1px solid ${T.teal}`;e.target.style.boxShadow=`0 0 0 3px rgba(0,167,181,.15)`;}}
+            onBlur={e=>{e.target.style.boxShadow='none';e.target.style.border=`1px solid ${T.border}`;}}
+          />
+        )}
       </Field>
       <Field label="Risk Level Addressed" required>
         <Select value={data.risk} onChange={e=>setData({...data,risk:e.target.value})} options={[
@@ -294,14 +319,14 @@ const SubmitForm = ({ nav, showToast }) => {
   const [errors, setErrors] = useState({});
   const [data, setData] = useState({
     project:'FBA', sector:'Rail', location:'', submitter:'Jake Anderson',
-    date:'29 Apr 2026', phase:'', problem:'', solution:'', benefit:'', risk:'',
+    date:'29 Apr 2026', phase:'', problem:'', solution:'', benefit:'', benefitOther:'', risk:'',
     files:[], fsrs:[], pc1:'', metrics:'',
   });
 
   const validate = () => {
     const e = {};
     if(step===1){ if(!data.sector)e.sector='Please select a sector'; if(!data.location)e.location='Please enter site location'; if(!data.phase)e.phase='Please select a phase'; }
-    if(step===2){ if(!data.problem||data.problem.length<20)e.problem='Please describe the problem (min 20 characters)'; if(!data.solution||data.solution.length<20)e.solution='Please describe the solution (min 20 characters)'; if(!data.benefit)e.benefit='Please select the expected health benefit'; }
+    if(step===2){ if(!data.problem||data.problem.length<20)e.problem='Please describe the problem (min 20 characters)'; if(!data.solution||data.solution.length<20)e.solution='Please describe the solution (min 20 characters)'; if(!data.benefit)e.benefit='Please select the expected health benefit'; else if(data.benefit==='Other'&&!(data.benefitOther||'').trim())e.benefit='Please specify the health benefit'; }
     if(step===3){ if(!data.fsrs.length)e.fsrs='Please select at least one FSR category'; }
     setErrors(e);
     return !Object.keys(e).length;

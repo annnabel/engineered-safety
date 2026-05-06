@@ -80,8 +80,7 @@ const Dashboard = ({ nav, showToast }) => {
         <p style={{fontSize:15,color:'rgba(255,255,255,.6)',margin:'0 0 28px',fontFamily:T.font,maxWidth:520}}>Capture, validate, and scale safety innovations across the project workforce.</p>
         <div style={{display:'flex',gap:12,flexWrap:'wrap'}}>
           <Btn size="lg" onClick={() => nav('submit')}>+ Submit New Idea</Btn>
-          <Btn size="lg" variant="secondary" onClick={() => nav('search')}
-            style={{borderColor:T.red,color:'white',background:T.red,opacity:0.9}}>
+          <Btn size="lg" variant="teal" onClick={() => nav('search')}>
             Browse Solutions
           </Btn>
         </div>

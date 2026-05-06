@@ -91,9 +91,9 @@ const Btn = ({ children, variant='primary', size='md', onClick, disabled, style:
   const [h,setH] = useState(false);
   const vs = {
     primary:{bg:h?T.redHover:T.red,color:'white',border:'none'},
-    secondary:{bg:h?'#ffcccc':'white',color:T.red,border:`2px solid ${T.red}`},
+    secondary:{bg:h?'#fce4e6':'#fff5f5',color:T.redActive,border:`2px solid ${T.red}`},
     teal:{bg:h?T.tealDark:T.teal,color:'white',border:'none'},
-    ghost:{bg:h?T.bg:'transparent',color:T.textSec,border:`1px solid ${T.border}`},
+    ghost:{bg:h?T.borderLight:T.bg,color:T.text,border:`1px solid ${T.textMuted}`},
     danger:{bg:h?T.redHover:T.red,color:'white',border:'none'},
   };
   const sz = {sm:{p:'6px 14px',fs:12,h:32},md:{p:'9px 20px',fs:13.5,h:40},lg:{p:'12px 28px',fs:15,h:48}};

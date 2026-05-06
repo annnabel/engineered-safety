@@ -12,6 +12,90 @@ const QUEUE = [
   {id:'ES-237',title:'Nightworks Proximity Lighting',submitter:'R. Davis',role:'Electrician',days:6,status:'Submitted',sector:'Delivery Partner',fsrCat:'FSR-007',summary:'Programmable LED matrix eliminates shadow zones across 40m deck spans during night concrete pours.',priority:'Normal'},
 ];
 
+// ── CLARIFICATION MODAL ────────────────────────────────────────────────────
+const ClarificationModal = ({ idea, onClose, onSubmit }) => {
+  const [comment, setComment] = React.useState('');
+  const [topic, setTopic] = React.useState('');
+  if (!idea) return null;
+
+  const TOPICS = [
+    'Problem statement needs more detail',
+    'Proposed solution unclear',
+    'Risk level / health benefit',
+    'Site location or phase',
+    'Supporting files / evidence',
+    'Other',
+  ];
+
+  return (
+    <div style={{position:'fixed',inset:0,zIndex:3000,display:'flex',alignItems:'center',justifyContent:'center'}} onClick={onClose}>
+      <div style={{position:'absolute',inset:0,background:'rgba(0,0,0,.55)'}} />
+      <div onClick={e=>e.stopPropagation()} style={{position:'relative',background:T.white,borderRadius:10,width:'100%',maxWidth:560,boxShadow:T.s3,margin:'0 16px',overflow:'hidden',animation:'slideUp .2s ease'}}>
+
+        <div style={{padding:'18px 24px',borderBottom:`1px solid ${T.borderLight}`,display:'flex',gap:12,alignItems:'flex-start'}}>
+          <div style={{flex:1}}>
+            <h3 style={{fontFamily:T.font,fontSize:16,fontWeight:700,color:T.text,margin:'0 0 4px'}}>Request Clarification</h3>
+            <div style={{fontFamily:T.font,fontSize:11,color:T.textMuted}}>{idea.id} · {idea.title}</div>
+          </div>
+          <button onClick={onClose} style={{background:'none',border:'none',cursor:'pointer',fontSize:22,color:T.textMuted,padding:'0 4px'}}
+            onMouseEnter={e=>e.currentTarget.style.color=T.red}
+            onMouseLeave={e=>e.currentTarget.style.color=T.textMuted}>×</button>
+        </div>
+
+        <div style={{padding:'20px 24px'}}>
+          <div style={{background:'#e6f7f8',border:`1px solid #b2dfdb`,borderRadius:6,padding:'10px 14px',marginBottom:18,fontFamily:T.font,fontSize:12,color:'#005661'}}>
+            The submitter will receive your comments and can respond directly without resubmitting. Idea will remain in your queue as <strong>Awaiting Clarification</strong>.
+          </div>
+
+          <div style={{marginBottom:16}}>
+            <label style={{display:'block',fontFamily:T.font,fontSize:12,fontWeight:600,color:T.textSec,marginBottom:6}}>
+              What needs clarification? <span style={{color:T.red}}>*</span>
+            </label>
+            <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
+              {TOPICS.map(t => {
+                const active = topic === t;
+                return (
+                  <button key={t} type="button" onClick={()=>setTopic(t)} style={{
+                    padding:'6px 12px',borderRadius:14,fontFamily:T.font,fontSize:12,
+                    border:`1px solid ${active?T.teal:T.border}`,
+                    background: active ? T.teal : 'white',
+                    color: active ? 'white' : T.textSec,
+                    fontWeight: active ? 600 : 500,
+                    cursor:'pointer',transition:'all 120ms',
+                  }}>{t}</button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div>
+            <label style={{display:'block',fontFamily:T.font,fontSize:12,fontWeight:600,color:T.textSec,marginBottom:6}}>
+              Your comments to the submitter <span style={{color:T.red}}>*</span>
+            </label>
+            <textarea
+              value={comment}
+              onChange={e=>setComment(e.target.value)}
+              rows={5}
+              placeholder="Describe specifically what information is missing or unclear, and what the submitter should provide…"
+              style={{width:'100%',padding:'10px 12px',fontFamily:T.font,fontSize:13,color:T.text,border:`1px solid ${T.border}`,borderRadius:4,resize:'vertical',boxSizing:'border-box',outline:'none',lineHeight:1.5}}
+              onFocus={e=>{e.target.style.border=`1px solid ${T.teal}`;e.target.style.boxShadow=`0 0 0 3px rgba(0,167,181,.15)`;}}
+              onBlur={e=>{e.target.style.boxShadow='none';e.target.style.border=`1px solid ${T.border}`;}}
+            />
+            <div style={{fontFamily:T.font,fontSize:11,color:T.textMuted,marginTop:6}}>{comment.length} characters · minimum 15</div>
+          </div>
+        </div>
+
+        <div style={{padding:'14px 24px',borderTop:`1px solid ${T.borderLight}`,display:'flex',gap:10,justifyContent:'flex-end',background:T.bg}}>
+          <Btn variant="ghost" size="sm" onClick={onClose}>Cancel</Btn>
+          <Btn variant="teal" size="sm" disabled={!topic || comment.trim().length<15} onClick={()=>{ if(topic && comment.trim().length>=15) onSubmit({topic, comment}); }}>
+            Send Clarification Request
+          </Btn>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // ── FEEDBACK MODAL ──────────────────────────────────────────────────────────
 const FeedbackModal = ({ idea, mode, onClose, onSubmit }) => {
   const [feedback, setFeedback] = React.useState('');
@@ -206,7 +290,7 @@ const IdeaDetailModal = ({idea, onClose, onApprove, onReturn, onClarify, showToa
         </div>
 
         <div style={{padding:'14px 24px',borderTop:`1px solid ${T.borderLight}`,display:'flex',gap:10,justifyContent:'space-between',flexShrink:0,background:T.bg}}>
-          <Btn variant="ghost" size="sm" onClick={()=>{onClarify(idea.id);onClose();}}>Request Clarification</Btn>
+          <Btn variant="ghost" size="sm" onClick={()=>{onClarify(idea);onClose();}}>Request Clarification</Btn>
           <div style={{display:'flex',gap:10}}>
             <Btn variant="ghost" size="sm" onClick={()=>{onReturn(idea);onClose();}}>↩ Return with Feedback</Btn>
             <Btn variant="teal" size="sm" onClick={()=>{onApprove(idea.id);onClose();}}>Approve & Forward to Leadership ✓</Btn>
@@ -221,6 +305,7 @@ const ESLDashboard = ({ nav, showToast }) => {
   const [items, setItems] = useState(QUEUE);
   const [selected, setSelected] = useState(null);
   const [feedbackTarget, setFeedbackTarget] = useState(null);
+  const [clarifyTarget, setClarifyTarget] = useState(null);
   const [filterStatus, setFilterStatus] = useState('All');
   const overdue = items.filter(i=>i.days>7);
 
@@ -230,7 +315,12 @@ const ESLDashboard = ({ nav, showToast }) => {
     setFeedbackTarget(null);
     showToast(`↩ ${idea.id} returned to ${idea.submitter} with your feedback.`,'warning');
   };
-  const clarify = (id) => { showToast(`Clarification request sent to submitter of ${id}.`,'info'); };
+  const clarify = (idea) => { setClarifyTarget(idea); };
+  const sendClarification = (idea, payload) => {
+    setItems(p=>p.map(i => i.id===idea.id ? {...i, status:'Awaiting Clarification'} : i));
+    setClarifyTarget(null);
+    showToast(`💬 Clarification request sent to ${idea.submitter} for ${idea.id}.`,'info');
+  };
 
   const visible = filterStatus==='All' ? items : items.filter(i=>i.status===filterStatus);
 
@@ -335,6 +425,7 @@ const ESLDashboard = ({ nav, showToast }) => {
       </Card>
       {selected&&<IdeaDetailModal idea={selected} onClose={()=>setSelected(null)} onApprove={approve} onReturn={(idea)=>{setSelected(null);setFeedbackTarget(idea);}} onClarify={clarify} showToast={showToast} />}
       {feedbackTarget&&<FeedbackModal idea={feedbackTarget} mode="esl" onClose={()=>setFeedbackTarget(null)} onSubmit={(fb)=>returnWithFeedback(feedbackTarget,fb)} />}
+      {clarifyTarget&&<ClarificationModal idea={clarifyTarget} onClose={()=>setClarifyTarget(null)} onSubmit={(payload)=>sendClarification(clarifyTarget,payload)} />}
     </Page>
   );
 };
@@ -419,11 +510,11 @@ const LeadershipDashboard = ({ nav, showToast }) => {
   };
 
   return (
-    <Page title="Reports & Approvals" subtitle="Monthly summary · Fremantle Bridges Alliance · April 2026"
-      breadcrumb="Home › Reports & Approvals"
+    <Page title="Approvals" subtitle="Action items requiring your decision · Fremantle Bridges Alliance · April 2026"
+      breadcrumb="Home › Approvals"
       actions={
         <div style={{display:'flex',gap:8}}>
-          <Btn variant="secondary" size="sm" onClick={()=>showToast('Generating PDF report… Check your downloads.','info')}>Export Monthly Report</Btn>
+          <Btn variant="secondary" size="sm" onClick={()=>showToast('Generating action list… Check your downloads.','info')}>Export Action List</Btn>
         </div>
       }
     >
@@ -466,79 +557,33 @@ const LeadershipDashboard = ({ nav, showToast }) => {
           </Card>
         </div>
       )}
-      {/* KPI Cards — no scroll required */}
-      <div style={{display:'flex',gap:16,marginBottom:24,flexWrap:'wrap'}}>
-        <KPICard label="Total Submitted" value="247" trend={12} trendLabel="vs last month" cta="View All" onCta={()=>nav('search')} accent={T.teal} />
-        <KPICard label="Pending Approval" value="8" cta="Review Now" onCta={()=>nav('esl')} accent={T.orange} />
-        <KPICard label="Approved This Month" value="12" trend={8} trendLabel="vs last month" accent={T.green} />
-        <KPICard label="Avg Implementation" value="45d" trend={-6} trendLabel="days vs target" accent={T.red} />
-      </div>
 
-      {/* Charts Row */}
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:24}}>
-        <Card>
-          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
-            <h3 style={{fontFamily:T.font,fontSize:14,fontWeight:700,color:T.text,margin:0}}>Submission Trend (6 months)</h3>
-            <span style={{fontFamily:T.font,fontSize:10,color:T.textMuted}}>Nov 2025 – Apr 2026</span>
+      {/* Escalated Items — kept as actionable list */}
+      <Card style={{marginBottom:24}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
+          <h3 style={{fontFamily:T.font,fontSize:14,fontWeight:700,color:T.text,margin:0}}>🚨 Escalated Items</h3>
+          <StatusBadge status="Submitted" />
+        </div>
+        {ESCALATED.length>0 ? (
+          <div style={{background:'#fce4ec',border:`1px solid ${T.red}`,borderRadius:6,padding:'10px 14px',marginBottom:12,fontFamily:T.font,fontSize:12,color:'#7f0000'}}>
+            ⚠ {ESCALATED.length} items have been pending review for over 14 days. Immediate action required.
           </div>
-          <TrendChart />
-        </Card>
-        <Card>
-          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
-            <h3 style={{fontFamily:T.font,fontSize:14,fontWeight:700,color:T.text,margin:0}}>Ideas by Status</h3>
-            <span style={{fontFamily:T.font,fontSize:10,color:T.textMuted}}>247 total</span>
-          </div>
-          <ImplDonut />
-        </Card>
-      </div>
-
-      {/* Escalated Alerts + Impl Actions */}
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:24}}>
-        <Card>
-          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
-            <h3 style={{fontFamily:T.font,fontSize:14,fontWeight:700,color:T.text,margin:0}}>🚨 Escalated Items</h3>
-            <StatusBadge status="Submitted" />
-          </div>
-          {ESCALATED.length>0 ? (
-            <div style={{background:'#fce4ec',border:`1px solid ${T.red}`,borderRadius:6,padding:'10px 14px',marginBottom:12,fontFamily:T.font,fontSize:12,color:'#7f0000'}}>
-              ⚠ {ESCALATED.length} items have been pending review for over 14 days. Immediate action required.
+        ) : (
+          <div style={{fontFamily:T.font,fontSize:13,color:T.green}}>✓ No escalated items</div>
+        )}
+        {ESCALATED.map(e=>(
+          <div key={e.id} style={{borderTop:`1px solid ${T.borderLight}`,padding:'10px 0',display:'flex',gap:12,alignItems:'center'}}>
+            <div style={{flex:1}}>
+              <div style={{fontFamily:T.font,fontSize:13,fontWeight:600,color:T.text}}>{e.title}</div>
+              <div style={{fontFamily:T.font,fontSize:11,color:T.textMuted,marginTop:2}}>{e.id} · {e.assignee}</div>
             </div>
-          ) : (
-            <div style={{fontFamily:T.font,fontSize:13,color:T.green}}>✓ No escalated items</div>
-          )}
-          {ESCALATED.map(e=>(
-            <div key={e.id} style={{borderTop:`1px solid ${T.borderLight}`,padding:'10px 0',display:'flex',gap:12,alignItems:'center'}}>
-              <div style={{flex:1}}>
-                <div style={{fontFamily:T.font,fontSize:13,fontWeight:600,color:T.text}}>{e.title}</div>
-                <div style={{fontFamily:T.font,fontSize:11,color:T.textMuted,marginTop:2}}>{e.id} · {e.assignee}</div>
-              </div>
-              <DaysPending days={e.days} />
-            </div>
-          ))}
-          <div style={{paddingTop:12}}>
-            <button onClick={()=>nav('esl')} style={{background:'none',border:'none',cursor:'pointer',color:T.teal,fontFamily:T.font,fontSize:12,fontWeight:600}}>View all escalated items →</button>
+            <DaysPending days={e.days} />
           </div>
-        </Card>
-
-        {/* Top 5 Sectors */}
-        <Card>
-          <h3 style={{fontFamily:T.font,fontSize:14,fontWeight:700,color:T.text,margin:'0 0 14px'}}>Ideas by Sector</h3>
-          {[{sector:'Rail',n:89,pct:36},{sector:'Roads',n:62,pct:25},{sector:'Defence',n:42,pct:17},{sector:'Water',n:36,pct:15},{sector:'Energy',n:18,pct:7}].map(r=>(
-            <div key={r.sector} style={{marginBottom:12}}>
-              <div style={{display:'flex',justifyContent:'space-between',marginBottom:4}}>
-                <div style={{display:'flex',gap:8,alignItems:'center'}}>
-                  <SectorTag sector={r.sector} />
-                  <span style={{fontFamily:T.font,fontSize:12,color:T.textSec}}>{r.n} ideas</span>
-                </div>
-                <span style={{fontFamily:T.font,fontSize:11,color:T.textMuted,fontWeight:600}}>{r.pct}%</span>
-              </div>
-              <div style={{height:5,background:T.borderLight,borderRadius:3,overflow:'hidden'}}>
-                <div style={{height:'100%',width:`${r.pct}%`,background:SECTOR_COLORS[r.sector]||T.teal,borderRadius:3,transition:'width 600ms ease'}} />
-              </div>
-            </div>
-          ))}
-        </Card>
-      </div>
+        ))}
+        <div style={{paddingTop:12}}>
+          <button onClick={()=>nav('esl')} style={{background:'none',border:'none',cursor:'pointer',color:T.teal,fontFamily:T.font,fontSize:12,fontWeight:600}}>View all escalated items →</button>
+        </div>
+      </Card>
 
       {/* Implementation Actions Table */}
       <Card style={{padding:0,overflow:'hidden'}}>

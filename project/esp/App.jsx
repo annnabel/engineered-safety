@@ -18,7 +18,7 @@ const ROLES = [
 const NAV_BY_ROLE = {
   team:       [{id:'dashboard',label:'Home'},{id:'submit',label:'Submit Idea'},{id:'search',label:'Search Library'}],
   esl:        [{id:'dashboard',label:'Home'},{id:'esl',label:'My Reviews'},{id:'search',label:'Search Library'}],
-  leadership: [{id:'dashboard',label:'Home'},{id:'leadership',label:'Reports & Approvals'},{id:'search',label:'Search Library'}],
+  leadership: [{id:'dashboard',label:'Home'},{id:'leadership',label:'Approvals'},{id:'search',label:'Search Library'}],
 };
 
 const STEP_BY_ROLE = { team:1, esl:2, leadership:3 };
